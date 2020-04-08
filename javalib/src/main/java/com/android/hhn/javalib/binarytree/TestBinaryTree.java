@@ -10,12 +10,12 @@ import java.util.ArrayList;
  */
 public class TestBinaryTree {
 
-    private static class Node {
-        Node left; // 左节点
-        Node right; // 右节点
+    private static class TreeNode {
+        TreeNode left; // 左节点
+        TreeNode right; // 右节点
         String data; // 存储的数据
 
-        public Node(Node left, Node right, String data) { // 节点初始化时指明子节点与数据
+        public TreeNode(TreeNode left, TreeNode right, String data) { // 节点初始化时指明子节点与数据
             this.left = left;
             this.right = right;
             this.data = data;
@@ -34,7 +34,7 @@ public class TestBinaryTree {
             return ((int) data.charAt(0)) / 10;
         }
 
-        public void preTraverse(Node root) {
+        public void preTraverse(TreeNode root) {
             if (root == null) {
                 return;
             }
@@ -43,7 +43,7 @@ public class TestBinaryTree {
             preTraverse(root.right);
         }
 
-        public void midTraverse(Node root) {
+        public void midTraverse(TreeNode root) {
             if (root == null) {
                 return;
             }
@@ -52,7 +52,7 @@ public class TestBinaryTree {
             midTraverse(root.right);
         }
 
-        public void backTraverse(Node root) {
+        public void backTraverse(TreeNode root) {
             if (root == null) {
                 return;
             }
@@ -67,7 +67,7 @@ public class TestBinaryTree {
      *
      * @param root
      */
-    private static void allTraverse(Node root) {
+    private static void allTraverse(TreeNode root) {
         System.out.println("前序：");
         root.preTraverse(root);
         System.out.println("\n中序：");
@@ -76,7 +76,7 @@ public class TestBinaryTree {
         root.backTraverse(root);
     }
 
-    private static void allNodePlusOne(Node root) {
+    private static void allNodePlusOne(TreeNode root) {
         if (root == null)
             return;
         root.data += "+1";
@@ -92,7 +92,7 @@ public class TestBinaryTree {
      *
      * @return
      */
-    private static boolean isSameTree(Node root1, Node root2) {
+    private static boolean isSameTree(TreeNode root1, TreeNode root2) {
         // 都为空的话，显然相同
         if (root1 == null && root2 == null)
             return true;
@@ -114,7 +114,7 @@ public class TestBinaryTree {
      *
      * @return 深度
      */
-    private static int treeDepth(Node root) {
+    private static int treeDepth(TreeNode root) {
         if (root == null) {
             return 0;
         }
@@ -132,14 +132,14 @@ public class TestBinaryTree {
      *
      * @return 结果list
      */
-    private static ArrayList<ArrayList<String>> findPath(Node root, int target) {
+    private static ArrayList<ArrayList<String>> findPath(TreeNode root, int target) {
         findPathR(root, target, new ArrayList<String>());
         return res;
     }
 
     private static ArrayList<ArrayList<String>> res = new ArrayList<>();
 
-    private static void findPathR(Node root, int target, ArrayList<String> list) {
+    private static void findPathR(TreeNode root, int target, ArrayList<String> list) {
         if (root == null) {
             return;
         }
@@ -155,31 +155,32 @@ public class TestBinaryTree {
     }
 
     public static void main(String[] args) {
-        Node g = new Node(null, null, "G");
-        Node f = new Node(null, null, "F");
-        Node d = new Node(null, null, "D");
-        Node e = new Node(null, null, "E");
-        Node c = new Node(f, g, "C");
-        Node b = new Node(d, e, "B");
-        Node root = new Node(b, c, "A");
+        TreeNode g = new TreeNode(null, null, "G");
+        TreeNode f = new TreeNode(null, null, "F");
+        TreeNode d = new TreeNode(null, null, "D");
+        TreeNode e = new TreeNode(null, null, "E");
+        TreeNode c = new TreeNode(f, g, "C");
+        TreeNode b = new TreeNode(d, e, "B");
+        TreeNode root = new TreeNode(b, c, "A");
 
-        //allTraverse(root);
+        //        allTraverse(root);
 
-        //allNodePlusOne(root);
-        //root.preTraverse(root);
+        //        allNodePlusOne(root);
+        //        root.preTraverse(root);
 
-        //Node root2 = new Node(d, e, "A");
-        //System.out.println(isSameTree(root, root));
+        //        TreeNode root2 = new TreeNode(d, e, "A");
+        //        System.out.println(isSameTree(root, root));
 
-        //System.out.println(treeDepth(root));
+        //        System.out.println(treeDepth(root));
 
-        findPath(root, 19);
-        for (ArrayList<String> temp : res) {
-            for (String str : temp) {
-                System.out.print(str + ":");
-            }
-            System.out.println();
-        }
+        //        findPath(root, 19);
+        //        for (ArrayList<String> temp : res) {
+        //            for (String str : temp) {
+        //                System.out.print(str + ":");
+        //            }
+        //            System.out.println();
+        //        }
+
     }
 
 }
