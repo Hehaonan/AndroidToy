@@ -1,6 +1,9 @@
 package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  * Author: haonan.he ;<p/>
@@ -154,6 +157,70 @@ public class TestBinaryTree {
         list.remove(list.size() - 1);
     }
 
+    /**
+     * 从上到下打印二叉树
+     *
+     * @param root 二叉树根节点
+     *
+     * @return 结果list
+     */
+    private static ArrayList<String> printTreeTopToBottom(TreeNode root) {
+        ArrayList<String> list = new ArrayList<>();
+        if (root == null) {
+            return list;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(root);
+        while (!queue.isEmpty()) {
+            TreeNode node = queue.poll(); // 先进先出
+            if (node.left != null) {
+                queue.offer(node.left);
+            }
+            if (node.right != null) {
+                queue.offer(node.right);
+            }
+            list.add(node.data);
+        }
+        return list;
+    }
+
+    /**
+     * 把二叉树打印成多行
+     *
+     * @param pRoot 二叉树根节点
+     *
+     * @return 结果list
+     */
+    private static ArrayList<ArrayList<String>> printTreeTopToBottomByLine(TreeNode pRoot) {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        if (pRoot == null) {
+            return list;
+        }
+
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(pRoot);
+        int cnt = 1;
+        while (cnt > 0) {
+            int num = cnt;
+            cnt = 0;
+            ArrayList<String> res = new ArrayList<>();
+            for (int i = 0; i < num; ++i) { // 循环同层子节点的个数，实现分组
+                TreeNode node = queue.poll();
+                if (node.left != null) {
+                    queue.offer(node.left);
+                    ++cnt; // 先进入的节点分别记录有几个子节点
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                    ++cnt; // 先进入的节点分别记录有几个子节点
+                }
+                res.add(node.data);// 同层添加到一组
+            }
+            list.add(res);
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         TreeNode g = new TreeNode(null, null, "G");
         TreeNode f = new TreeNode(null, null, "F");
@@ -180,7 +247,10 @@ public class TestBinaryTree {
         //            }
         //            System.out.println();
         //        }
-
+        ArrayList<String> list = printTreeTopToBottom(root);
+        System.out.println(Arrays.toString(list.toArray()));
+        ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
+        System.out.println(Arrays.toString(lines.toArray()));
     }
 
 }
