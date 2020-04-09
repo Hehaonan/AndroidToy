@@ -272,7 +272,6 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "getPidByProcessName: " + appProcess.processName + ", appProcess.pid:" + appProcess.pid);
                 }
             }
-            //mProcessIds[1] = 12103;
         }
     }
 
