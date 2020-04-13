@@ -192,7 +192,7 @@ public class TestBinaryTree {
             return list;
         }
         Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
+        queue.offer(root);// 根节点入队列
         while (!queue.isEmpty()) {
             TreeNode node = queue.poll(); // 先进先出
             if (node.left != null) {
@@ -218,23 +218,18 @@ public class TestBinaryTree {
         if (pRoot == null) {
             return list;
         }
-
         Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(pRoot);
-        int cnt = 1;
-        while (cnt > 0) {
-            int num = cnt;
-            cnt = 0;
+        queue.offer(pRoot);// 根节点入队列
+        while (!queue.isEmpty()) {
+            int len = queue.size();// 每层的个数
             ArrayList<String> res = new ArrayList<>();
-            for (int i = 0; i < num; ++i) { // 循环同层子节点的个数，实现分组
+            for (int i = 0; i < len; i++) { // 循环同层子节点的个数，实现分组
                 TreeNode node = queue.poll();
-                if (node.left != null) {
+                if (node.left != null) {// 先左后右
                     queue.offer(node.left);
-                    ++cnt; // 先进入的节点分别记录有几个子节点
                 }
                 if (node.right != null) {
                     queue.offer(node.right);
-                    ++cnt; // 先进入的节点分别记录有几个子节点
                 }
                 res.add(node.data);// 同层添加到一组
             }
@@ -245,11 +240,11 @@ public class TestBinaryTree {
 
     public static void main(String[] args) {
         TreeNode g = new TreeNode(null, null, "G");
-        TreeNode d = new TreeNode(null, null, "D");
+        TreeNode f = new TreeNode(null, null, "F");
         TreeNode e = new TreeNode(null, null, "E");
-        TreeNode f = new TreeNode(d, e, "F");
+        TreeNode d = new TreeNode(null, null, "D");
         TreeNode c = new TreeNode(f, g, "C");
-        TreeNode b = new TreeNode(null, null, "B");
+        TreeNode b = new TreeNode(d, e, "B");
         TreeNode root = new TreeNode(b, c, "A");
 
         //        allTraverse(root);
@@ -260,8 +255,8 @@ public class TestBinaryTree {
         //        TreeNode root2 = new TreeNode(d, e, "A");
         //        System.out.println(isSameTree(root, root));
 
-        System.out.println(treeDepth(root));
-        System.out.println("深度：" + treeDepthByLoop(root));
+        //        System.out.println(treeDepth(root));
+        //        System.out.println("深度：" + treeDepthByLoop(root));
         //        findPath(root, 19);
         //        for (ArrayList<String> temp : res) {
         //            for (String str : temp) {
@@ -270,10 +265,10 @@ public class TestBinaryTree {
         //            System.out.println();
         //        }
 
-        //        ArrayList<String> list = printTreeTopToBottom(root);
-        //        System.out.println(Arrays.toString(list.toArray()));
-        //        ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
-        //        System.out.println(Arrays.toString(lines.toArray()));
+        // ArrayList<String> list = printTreeTopToBottom(root);
+        // System.out.println(Arrays.toString(list.toArray()));
+        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
+        // System.out.println(Arrays.toString(lines.toArray()));
     }
 
 }
