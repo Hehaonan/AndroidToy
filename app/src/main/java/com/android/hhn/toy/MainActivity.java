@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.android.hhn.toy.jobscheduler.MyJobService;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import androidx.navigation.ui.AppBarConfiguration;
@@ -90,20 +91,30 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Log.i(TAG, "onCreate1: " + Process.myPid());
-        getPidByProcessName(getApplicationContext());
-
         printPath(this.getFilesDir().getPath());
         printPath(this.getCacheDir().getPath());
         printPath(Environment.getExternalStorageDirectory().getPath());
 
-        printPath(this.getObbDir().getPath());
+        printPath(this.getExternalCacheDir().getPath());
         printPath(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath());
         for (File f : this.getExternalMediaDirs()) {
             printPath(f.getAbsolutePath());
         }
+        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        //            Log.i(TAG, "Scoped Storage: " + Environment.isExternalStorageLegacy());
+        //        }
+        File file = new File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "test1.txt");
+        File file2 = new File("/storage/sdcard0/Android/", "test2.txt");
+        try {
+            Log.i(TAG, "create：" + file.createNewFile());
+            Log.i(TAG, "create：" + file2.createNewFile());
+        } catch (IOException e) {
+            Log.i(TAG, "create fail：" + e.getMessage());
+            e.printStackTrace();
+        }
+        // /sdcard/Android/data/com.android.hhn.toy
+        // /storage/self/primary/Android/data/com.android.hhn.toy
 
-        Log.i(TAG, "Scoped Storage: " + Environment.isExternalStorageLegacy());
     }
 
     private void printPath(String s) {
