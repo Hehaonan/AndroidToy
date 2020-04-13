@@ -32,8 +32,14 @@ import android.widget.Toast;
 
 import com.android.hhn.toy.jobscheduler.MyJobService;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.List;
 
 import androidx.navigation.ui.AppBarConfiguration;
@@ -96,25 +102,73 @@ public class MainActivity extends AppCompatActivity {
         printPath(Environment.getExternalStorageDirectory().getPath());
 
         printPath(this.getExternalCacheDir().getPath());
-        printPath(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath());
+        printPath(this.getExternalFilesDir("XXX").getPath());
         for (File f : this.getExternalMediaDirs()) {
             printPath(f.getAbsolutePath());
         }
-        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        //            Log.i(TAG, "Scoped Storage: " + Environment.isExternalStorageLegacy());
-        //        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            Log.i(TAG, "Scoped Storage: " + Environment.isExternalStorageLegacy());
+        }
         File file = new File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "test1.txt");
-        File file2 = new File("/storage/sdcard0/Android/", "test2.txt");
         try {
             Log.i(TAG, "create：" + file.createNewFile());
-            Log.i(TAG, "create：" + file2.createNewFile());
         } catch (IOException e) {
             Log.i(TAG, "create fail：" + e.getMessage());
             e.printStackTrace();
         }
-        // /sdcard/Android/data/com.android.hhn.toy
-        // /storage/self/primary/Android/data/com.android.hhn.toy
+        saveGid("test1");
+        initGuid();
+    }
 
+    private void saveGid(String id) {
+        BufferedWriter bw = null;
+        try {
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                String path = Environment.getExternalStorageDirectory().getPath() + "/Android/";
+                File file = new File(path, ".zest10010");
+                bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
+                bw.write(id);
+                bw.flush();
+            }
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        } finally {
+            if (bw != null) {
+                try {
+                    bw.close();
+                } catch (IOException e1) {
+                    Log.e(TAG, e1.getMessage());
+                }
+            }
+        }
+    }
+
+    private void initGuid() {
+        String gidFromExternal = null;
+        try {
+            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
+                String path = Environment.getExternalStorageDirectory().getPath() + "/Android/";
+                File file = new File(path, ".zest10010");//  .unique
+                if (file.exists()) {
+                    BufferedReader br = null;
+                    try {
+                        br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+                        gidFromExternal = br.readLine();
+                        Log.d(TAG, "initGuid: " + gidFromExternal);
+                    } finally {
+                        if (br != null) {
+                            try {
+                                br.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void printPath(String s) {
