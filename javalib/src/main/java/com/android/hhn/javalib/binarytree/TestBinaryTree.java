@@ -1,7 +1,6 @@
 package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -124,6 +123,29 @@ public class TestBinaryTree {
         int lDepth = treeDepth(root.left);
         int rDepth = treeDepth(root.right);
         return 1 + Math.max(lDepth, rDepth);
+        // return 1 + Math.min(lDepth, rDepth); // 最小深度
+    }
+
+
+    private static int treeDepthByLoop(TreeNode root) {
+        Queue<TreeNode> q = new LinkedList<>();
+        if (root == null)
+            return 0;
+        q.offer(root);// 根节点入队列
+        int level = 0;
+        while (!q.isEmpty()) {
+            int len = q.size();
+            System.out.println("每层个数" + len);
+            level++;
+            while (len-- > 0) { // 每一层遍历完再向下
+                TreeNode tmp = q.poll(); // 弹出队列的head
+                if (null != tmp.left)
+                    q.offer(tmp.left);
+                if (null != tmp.right)
+                    q.offer(tmp.right);
+            }
+        }
+        return level;
     }
 
 
@@ -223,11 +245,11 @@ public class TestBinaryTree {
 
     public static void main(String[] args) {
         TreeNode g = new TreeNode(null, null, "G");
-        TreeNode f = new TreeNode(null, null, "F");
         TreeNode d = new TreeNode(null, null, "D");
         TreeNode e = new TreeNode(null, null, "E");
+        TreeNode f = new TreeNode(d, e, "F");
         TreeNode c = new TreeNode(f, g, "C");
-        TreeNode b = new TreeNode(d, e, "B");
+        TreeNode b = new TreeNode(null, null, "B");
         TreeNode root = new TreeNode(b, c, "A");
 
         //        allTraverse(root);
@@ -238,8 +260,8 @@ public class TestBinaryTree {
         //        TreeNode root2 = new TreeNode(d, e, "A");
         //        System.out.println(isSameTree(root, root));
 
-        //        System.out.println(treeDepth(root));
-
+        System.out.println(treeDepth(root));
+        System.out.println("深度：" + treeDepthByLoop(root));
         //        findPath(root, 19);
         //        for (ArrayList<String> temp : res) {
         //            for (String str : temp) {
@@ -247,10 +269,11 @@ public class TestBinaryTree {
         //            }
         //            System.out.println();
         //        }
-        ArrayList<String> list = printTreeTopToBottom(root);
-        System.out.println(Arrays.toString(list.toArray()));
-        ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
-        System.out.println(Arrays.toString(lines.toArray()));
+
+        //        ArrayList<String> list = printTreeTopToBottom(root);
+        //        System.out.println(Arrays.toString(list.toArray()));
+        //        ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
+        //        System.out.println(Arrays.toString(lines.toArray()));
     }
 
 }
