@@ -7,10 +7,10 @@ import java.util.Queue;
 /**
  * Author: haonan.he ;<p/>
  * Date: 2020/4/1,5:14 PM ;<p/>
- * Description: ;<p/>
+ * Description: 二叉树练习;<p/>
  * Other: ;
  */
-public class TestBinaryTree {
+public class BinaryTreePractice {
 
     private static class TreeNode {
         TreeNode left; // 左节点
@@ -267,6 +267,58 @@ public class TestBinaryTree {
         return isSame(root1.left, root2.left) && isSame(root1.right, root2.right);
     }
 
+    /**
+     * 判断是否是平衡二叉树
+     *
+     * @param root 二叉树根结点
+     *
+     * @return 是否是平衡二叉树
+     */
+    private static boolean isBalanced(TreeNode root) {
+        if (root == null) { // 空树也是平衡二叉树
+            return true;
+        }
+        isBalanced = true;
+        treeDepthIsBalanced(root);
+        return isBalanced;
+    }
+
+    private static boolean isBalanced;
+
+    private static int treeDepthIsBalanced(TreeNode root) {
+        if (root == null || !isBalanced) {
+            return 0;
+        }
+        int lDepth = treeDepthIsBalanced(root.left);
+        int rDepth = treeDepthIsBalanced(root.right);
+        // 后序遍历逻辑
+        if (Math.abs(lDepth - rDepth) > 1) {
+            isBalanced = false;
+        }
+        return 1 + Math.max(lDepth, rDepth);
+    }
+
+    /**
+     * 判断两棵树否是镜像二叉树
+     *
+     * @param root1
+     * @param root2
+     *
+     * @return
+     */
+    private static boolean isMirroredTree(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return true;
+        }
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        // 前序逻辑
+        if (!root1.data.equals(root2.data)) {
+            return false;
+        }
+        return isMirroredTree(root1.left, root2.right) && isMirroredTree(root1.right, root2.left);
+    }
 
     public static void main(String[] args) {
         TreeNode g = new TreeNode(null, null, "G");
@@ -299,8 +351,15 @@ public class TestBinaryTree {
         // System.out.println(Arrays.toString(list.toArray()));
         // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
         // System.out.println(Arrays.toString(lines.toArray()));
-        TreeNode root2 = new TreeNode(f, g, "C");
-        System.out.println(hasSubtree(root, root2));
+
+        // TreeNode root2 = new TreeNode(b, f, "C");
+        // System.out.println(hasSubtree(root, root2));
+
+        // System.out.println(isBalanced(root));
+
+        TreeNode root1 = new TreeNode(f, g, "A");
+        TreeNode root2 = new TreeNode(g, f, "A");
+        System.out.println(isMirroredTree(root1, root2));
     }
 
 }
