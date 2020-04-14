@@ -238,6 +238,36 @@ public class TestBinaryTree {
         return list;
     }
 
+    /**
+     * 输入两棵二叉树A，B，判断B是不是A的子结构
+     *
+     * @param root1
+     * @param root2
+     *
+     * @return
+     */
+    private static boolean hasSubtree(TreeNode root1, TreeNode root2) {
+        if (root1 == null || root2 == null) {
+            return false;
+        }
+        return isSame(root1, root2) || hasSubtree(root1.left, root2) || hasSubtree(root1.right, root2);
+    }
+
+    private static boolean isSame(TreeNode root1, TreeNode root2) {
+        if (root2 == null) {// 子树可以为空
+            return true;
+        }
+        // 主树不能为空
+        if (root1 == null) {
+            return false;
+        }
+        if (!root1.data.equals(root2.data)) {
+            return false;
+        }
+        return isSame(root1.left, root2.left) && isSame(root1.right, root2.right);
+    }
+
+
     public static void main(String[] args) {
         TreeNode g = new TreeNode(null, null, "G");
         TreeNode f = new TreeNode(null, null, "F");
@@ -269,6 +299,8 @@ public class TestBinaryTree {
         // System.out.println(Arrays.toString(list.toArray()));
         // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
         // System.out.println(Arrays.toString(lines.toArray()));
+        TreeNode root2 = new TreeNode(f, g, "C");
+        System.out.println(hasSubtree(root, root2));
     }
 
 }
