@@ -320,6 +320,26 @@ public class BinaryTreePractice {
         return isMirroredTree(root1.left, root2.right) && isMirroredTree(root1.right, root2.left);
     }
 
+    /**
+     * 将二叉树转换为它的镜像
+     *
+     * @param root
+     */
+    private static void getTreeMirrored(TreeNode root) {
+        if (root == null) {// 不能为空
+            return;
+        }
+        if (null == root.left && null == root.right) {// 左右都为空
+            return;
+        }
+        // 左右互换
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+        getTreeMirrored(root.left);
+        getTreeMirrored(root.right);
+    }
+
     public static void main(String[] args) {
         TreeNode g = new TreeNode(null, null, "G");
         TreeNode f = new TreeNode(null, null, "F");
@@ -357,9 +377,13 @@ public class BinaryTreePractice {
 
         // System.out.println(isBalanced(root));
 
-        TreeNode root1 = new TreeNode(f, g, "A");
-        TreeNode root2 = new TreeNode(g, f, "A");
-        System.out.println(isMirroredTree(root1, root2));
+        //        TreeNode root1 = new TreeNode(f, g, "A");
+        //        TreeNode root2 = new TreeNode(g, f, "A");
+        //        System.out.println(isMirroredTree(root1, root2));
+
+        //        getTreeMirrored(root);
+        //        ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
+        //        System.out.println(Arrays.toString(lines.toArray()));
     }
 
 }
