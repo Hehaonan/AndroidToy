@@ -36,30 +36,45 @@ public class BinaryTreePractice {
             return ((int) data.charAt(0)) / 10;
         }
 
-        public void preTraverse(TreeNode root) {
+        /**
+         * 前序遍历
+         *
+         * @param root
+         */
+        public void preOrderTraversal(TreeNode root) {
             if (root == null) {
                 return;
             }
             System.out.print(root.dataInt() + "->");
-            preTraverse(root.left);
-            preTraverse(root.right);
+            preOrderTraversal(root.left);
+            preOrderTraversal(root.right);
         }
 
-        public void midTraverse(TreeNode root) {
+        /**
+         * 中序遍历
+         *
+         * @param root
+         */
+        public void inOrderTraversal(TreeNode root) {
             if (root == null) {
                 return;
             }
-            midTraverse(root.left);
+            inOrderTraversal(root.left);
             System.out.print(root.data + "->");
-            midTraverse(root.right);
+            inOrderTraversal(root.right);
         }
 
-        public void backTraverse(TreeNode root) {
+        /**
+         * 后序遍历
+         *
+         * @param root
+         */
+        public void postOrderTraversal(TreeNode root) {
             if (root == null) {
                 return;
             }
-            backTraverse(root.left);
-            backTraverse(root.right);
+            postOrderTraversal(root.left);
+            postOrderTraversal(root.right);
             System.out.print(root.data + "->");
         }
     }
@@ -71,13 +86,18 @@ public class BinaryTreePractice {
      */
     private static void allTraverse(TreeNode root) {
         System.out.println("前序：");
-        root.preTraverse(root);
+        root.preOrderTraversal(root);
         System.out.println("\n中序：");
-        root.midTraverse(root);
+        root.inOrderTraversal(root);
         System.out.println("\n后序：");
-        root.backTraverse(root);
+        root.postOrderTraversal(root);
     }
 
+    /**
+     * 所有节点的值+1
+     *
+     * @param root
+     */
     private static void allNodePlusOne(TreeNode root) {
         if (root == null)
             return;
