@@ -1,6 +1,7 @@
 package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -130,7 +131,7 @@ public class BinaryTreePractice {
     }
 
     /**
-     * 求二叉树的深度
+     * 求二叉树的深度，递归，深度优先
      *
      * @param root 二叉树根结点
      *
@@ -146,17 +147,42 @@ public class BinaryTreePractice {
         // return 1 + Math.min(lDepth, rDepth); // 最小深度
     }
 
+    //    private static int treeDepthByStack(TreeNode root) {
+    //        if (null == root)
+    //            return 0;
+    //        Stack<TreeNode> s = new Stack<>();
+    //        s.push(root);
+    //        int depth = 1;
+    //        while (!s.empty()) {
+    //            TreeNode temp = s.pop();
+    //            // 栈的性质，需要先遍历左子树，需要右节点先进入栈
+    //            if (null != temp.right) {
+    //                s.push(temp.right);
+    //            }
+    //            if (null != temp.left) {
+    //                s.push(temp.left);
+    //            }
+    //        }
+    //        return depth;
+    //    }
 
+    /**
+     * 求二叉树的深度，循环，使用队列，广度优先
+     *
+     * @param root
+     *
+     * @return
+     */
     private static int treeDepthByLoop(TreeNode root) {
         Queue<TreeNode> q = new LinkedList<>();
         if (root == null)
             return 0;
         q.offer(root);// 根节点入队列
-        int level = 0;
+        int depth = 0;
         while (!q.isEmpty()) {
             int len = q.size();
             System.out.println("每层个数" + len);
-            level++;
+            depth++;
             while (len-- > 0) { // 每一层遍历完再向下
                 TreeNode tmp = q.poll(); // 弹出队列的head
                 if (null != tmp.left)
@@ -165,7 +191,7 @@ public class BinaryTreePractice {
                     q.offer(tmp.right);
             }
         }
-        return level;
+        return depth;
     }
 
 
@@ -227,7 +253,7 @@ public class BinaryTreePractice {
     }
 
     /**
-     * 把二叉树打印成多行
+     * 把二叉树打印成多行，广度优先
      *
      * @param pRoot 二叉树根节点
      *
@@ -256,6 +282,32 @@ public class BinaryTreePractice {
             list.add(res);
         }
         return list;
+    }
+
+    /**
+     * 把二叉树打印成多行，深度优先
+     *
+     * @param root
+     *
+     * @return
+     */
+    private static ArrayList<ArrayList<String>> levelOrder(TreeNode root) {
+        if (root == null)
+            return new ArrayList<>();
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        dfs(root, list, 1);
+        return list;
+    }
+
+    private static void dfs(TreeNode root, ArrayList<ArrayList<String>> list, int level) {
+        if (root == null)
+            return;
+        if (list.size() < level) {
+            list.add(new ArrayList<String>());
+        }
+        list.get(level - 1).add(root.data);
+        dfs(root.left, list, level + 1);
+        dfs(root.right, list, level + 1);
     }
 
     /**
@@ -379,6 +431,7 @@ public class BinaryTreePractice {
 
         //        System.out.println(treeDepth(root));
         //        System.out.println("深度：" + treeDepthByLoop(root));
+
         //        findPath(root, 19);
         //        for (ArrayList<String> temp : res) {
         //            for (String str : temp) {
@@ -391,6 +444,9 @@ public class BinaryTreePractice {
         // System.out.println(Arrays.toString(list.toArray()));
         // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
         // System.out.println(Arrays.toString(lines.toArray()));
+
+        ArrayList<ArrayList<String>> lines = levelOrder(root);
+        System.out.println(Arrays.toString(lines.toArray()));
 
         // TreeNode root2 = new TreeNode(b, f, "C");
         // System.out.println(hasSubtree(root, root2));
