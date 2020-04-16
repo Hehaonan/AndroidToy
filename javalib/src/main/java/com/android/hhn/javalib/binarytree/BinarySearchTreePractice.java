@@ -128,6 +128,36 @@ public class BinarySearchTreePractice {
         return isInBST(root.left, target);
     }
 
+    /**
+     * @param root
+     *
+     * @return
+     */
+    private static int findMin(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        while (root.left != null) {
+            root = root.left;
+        }
+        return root.value;
+    }
+
+    /**
+     * @param root
+     *
+     * @return
+     */
+    private static int findMax(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        while (root.right != null) {
+            root = root.right;
+        }
+        return root.value;
+    }
+
     public static void main(String[] args) {
         TreeNode k = new TreeNode(null, null, 20);
         TreeNode j = new TreeNode(null, null, 14);
@@ -144,8 +174,11 @@ public class BinarySearchTreePractice {
 
         //System.out.println("是否是BTS：" + isValidBST(root));
 
-        int target = 14;
-        System.out.println(target + "是否在BTS：" + isInBST(root, target));
+        //int target = 14;
+        //System.out.println(target + "是否在BTS：" + isInBST(root, target));
+
+        System.out.println("min:" + findMin(root));
+        System.out.println("max:" + findMax(root));
     }
 
 }
