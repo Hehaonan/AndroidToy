@@ -1,9 +1,9 @@
 package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 /**
  * Author: haonan.he ;<p/>
@@ -147,24 +147,46 @@ public class BinaryTreePractice {
         // return 1 + Math.min(lDepth, rDepth); // 最小深度
     }
 
-    //    private static int treeDepthByStack(TreeNode root) {
-    //        if (null == root)
-    //            return 0;
-    //        Stack<TreeNode> s = new Stack<>();
-    //        s.push(root);
-    //        int depth = 1;
-    //        while (!s.empty()) {
-    //            TreeNode temp = s.pop();
-    //            // 栈的性质，需要先遍历左子树，需要右节点先进入栈
-    //            if (null != temp.right) {
-    //                s.push(temp.right);
-    //            }
-    //            if (null != temp.left) {
-    //                s.push(temp.left);
-    //            }
-    //        }
-    //        return depth;
-    //    }
+    private static void printStack(Stack<TreeNode> stack) {
+        // 打印栈的情况
+        TreeNode[] array = stack.toArray(new TreeNode[0]);
+        for (TreeNode t : array) {
+            System.out.print(t.data + "->");
+        }
+        System.out.println();
+    }
+
+    /**
+     * 求二叉树的深度，非递归，stack实现，深度优先
+     *
+     * @param root 二叉树根结点
+     *
+     * @return 深度
+     */
+    private static int treeDepthByStack(TreeNode root) {
+        if (root == null)
+            return 0;
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(root);
+        TreeNode lastVisit = root;// 最后访问的节点
+        int depth = 0;
+        while (!stack.isEmpty()) {
+            depth = Math.max(depth, stack.size());
+            // 打印栈的情况,能更好的理解
+            printStack(stack);
+            TreeNode top = stack.peek();
+            // 栈顶节点的左或者右，不等于之前访问的节点，代表该路径没有走过
+            if (top.left != null && lastVisit != top.left && lastVisit != top.right) {
+                stack.push(top.left);// 先左后右
+            } else if (top.right != null && lastVisit != top.right) {
+                stack.push(top.right);
+            } else {
+                lastVisit = stack.pop();// 记录最后访问的节点，并弹栈
+                System.out.println("lastVisit: " + lastVisit.data + ",并弹出" + lastVisit.data);
+            }
+        }
+        return depth;
+    }
 
     /**
      * 求二叉树的深度，循环，使用队列，广度优先
@@ -185,9 +207,9 @@ public class BinaryTreePractice {
             depth++;
             while (len-- > 0) { // 每一层遍历完再向下
                 TreeNode tmp = q.poll(); // 弹出队列的head
-                if (null != tmp.left)
+                if (tmp.left != null)
                     q.offer(tmp.left);
-                if (null != tmp.right)
+                if (tmp.right != null)
                     q.offer(tmp.right);
             }
         }
@@ -401,7 +423,7 @@ public class BinaryTreePractice {
         if (root == null) {// 不能为空
             return;
         }
-        if (null == root.left && null == root.right) {// 左右都为空
+        if (root.left == null && root.right == null) {// 左右都为空
             return;
         }
         // 左右互换
@@ -431,6 +453,7 @@ public class BinaryTreePractice {
 
         //        System.out.println(treeDepth(root));
         //        System.out.println("深度：" + treeDepthByLoop(root));
+        System.out.println("深度：" + treeDepthByStack(root));
 
         //        findPath(root, 19);
         //        for (ArrayList<String> temp : res) {
@@ -445,8 +468,8 @@ public class BinaryTreePractice {
         // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
         // System.out.println(Arrays.toString(lines.toArray()));
 
-        ArrayList<ArrayList<String>> lines = levelOrder(root);
-        System.out.println(Arrays.toString(lines.toArray()));
+        // ArrayList<ArrayList<String>> lines = levelOrder(root);
+        // System.out.println(Arrays.toString(lines.toArray()));
 
         // TreeNode root2 = new TreeNode(b, f, "C");
         // System.out.println(hasSubtree(root, root2));

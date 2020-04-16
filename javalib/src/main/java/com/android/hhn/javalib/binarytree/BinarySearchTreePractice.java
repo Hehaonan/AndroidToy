@@ -76,6 +76,13 @@ public class BinarySearchTreePractice {
         root.postOrderTraversal(root);
     }
 
+    /**
+     * 判断BST的合法性
+     *
+     * @param root
+     *
+     * @return
+     */
     private static boolean isValidBST(TreeNode root) {
         return isValidBST(root, null, null);
     }
