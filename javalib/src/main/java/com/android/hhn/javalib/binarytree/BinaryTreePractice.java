@@ -186,6 +186,26 @@ public class BinaryTreePractice {
             }
         }
         return depth;
+        //A->
+        //A->B->
+        //A->B->D->
+        //lastVisit: D,并弹出D
+        //A->B->
+        //A->B->E->
+        //lastVisit: E,并弹出E
+        //A->B->
+        //lastVisit: B,并弹出B
+        //A->
+        //A->C->
+        //A->C->F->
+        //lastVisit: F,并弹出F
+        //A->C->
+        //A->C->G->
+        //lastVisit: G,并弹出G
+        //A->C->
+        //lastVisit: C,并弹出C
+        //A->
+        //lastVisit: A,并弹出A
     }
 
     /**
