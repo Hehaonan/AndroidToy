@@ -1,5 +1,10 @@
 package com.android.hhn.javalib.binarytree;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  * Author: haonan.he ;<p/>
  * Date: 2020/4/15,5:14 PM ;<p/>
@@ -158,6 +163,79 @@ public class BinarySearchTreePractice {
         return root.value;
     }
 
+
+    /**
+     * BST中插入一个值，循环实现
+     *
+     * @param root
+     * @param value
+     */
+    private static void insertBSTByLoop(TreeNode root, int value) {
+        if (root == null) { // 空树
+            root = new TreeNode(null, null, value);
+            return;
+        }
+        while (root != null) {
+            if (value > root.value) {
+                if (root.right == null) {
+                    root.right = new TreeNode(null, null, value);
+                    return;
+                }
+                root = root.right;
+            } else { // data < root.data
+                if (root.left == null) {
+                    root.left = new TreeNode(null, null, value);
+                    return;
+                }
+                root = root.left;
+            }
+        }
+    }
+
+    /**
+     * BST中插入一个值，递归法
+     *
+     * @param root
+     * @param value
+     */
+    private static TreeNode insertBSTByRec(TreeNode root, int value) {
+        if (root == null) { // 空树
+            return new TreeNode(null, null, value);
+        }
+        if (value > root.value) {
+            root.right = insertBSTByRec(root.right, value);
+        }
+        if (value < root.value) {
+            root.left = insertBSTByRec(root.left, value);
+        }
+        return root;
+    }
+
+    private static ArrayList<ArrayList<String>> printTreeTopToBottomBFS(TreeNode pRoot) {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        if (pRoot == null) {
+            return list;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(pRoot);// 根节点入队列
+        while (!queue.isEmpty()) {
+            int len = queue.size();// 每层的个数
+            ArrayList<String> res = new ArrayList<>();
+            for (int i = 0; i < len; i++) { // 循环同层子节点的个数，实现分组
+                TreeNode node = queue.poll();
+                if (node.left != null) {// 先左后右
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+                res.add(node.value + "");// 同层添加到一组
+            }
+            list.add(res);
+        }
+        return list;
+    }
+
     public static void main(String[] args) {
         TreeNode k = new TreeNode(null, null, 20);
         TreeNode j = new TreeNode(null, null, 14);
@@ -177,8 +255,16 @@ public class BinarySearchTreePractice {
         //int target = 14;
         //System.out.println(target + "是否在BTS：" + isInBST(root, target));
 
-        System.out.println("min:" + findMin(root));
-        System.out.println("max:" + findMax(root));
+        //        System.out.println("min:" + findMin(root));
+        //        System.out.println("max:" + findMax(root));
+
+        insertBSTByLoop(root, 7);
+        ArrayList<ArrayList<String>> lines = printTreeTopToBottomBFS(root);
+        System.out.println(Arrays.toString(lines.toArray()));
+
+        insertBSTByRec(root, 15);
+        ArrayList<ArrayList<String>> lines2 = printTreeTopToBottomBFS(root);
+        System.out.println(Arrays.toString(lines2.toArray()));
     }
 
 }

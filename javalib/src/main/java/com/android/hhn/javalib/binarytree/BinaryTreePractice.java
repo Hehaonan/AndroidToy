@@ -301,7 +301,7 @@ public class BinaryTreePractice {
      *
      * @return 结果list
      */
-    private static ArrayList<ArrayList<String>> printTreeTopToBottomByLine(TreeNode pRoot) {
+    private static ArrayList<ArrayList<String>> printTreeTopToBottomBFS(TreeNode pRoot) {
         ArrayList<ArrayList<String>> list = new ArrayList<>();
         if (pRoot == null) {
             return list;
@@ -333,7 +333,7 @@ public class BinaryTreePractice {
      *
      * @return
      */
-    private static ArrayList<ArrayList<String>> levelOrder(TreeNode root) {
+    private static ArrayList<ArrayList<String>> printTreeTopToBottomDFS(TreeNode root) {
         if (root == null)
             return new ArrayList<>();
         ArrayList<ArrayList<String>> list = new ArrayList<>();
@@ -485,10 +485,10 @@ public class BinaryTreePractice {
 
         // ArrayList<String> list = printTreeTopToBottom(root);
         // System.out.println(Arrays.toString(list.toArray()));
-        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
+        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomBFS(root);
         // System.out.println(Arrays.toString(lines.toArray()));
 
-        // ArrayList<ArrayList<String>> lines = levelOrder(root);
+        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomDFS(root);
         // System.out.println(Arrays.toString(lines.toArray()));
 
         // TreeNode root2 = new TreeNode(b, f, "C");
