@@ -1,7 +1,6 @@
 package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -211,7 +210,8 @@ public class BinarySearchTreePractice {
         return root;
     }
 
-    private static ArrayList<ArrayList<String>> printTreeTopToBottomBFS(TreeNode pRoot) {
+    // 辅助打印方法
+    private static ArrayList<ArrayList<String>> printTreeByLinesBFS(TreeNode pRoot) {
         ArrayList<ArrayList<String>> list = new ArrayList<>();
         if (pRoot == null) {
             return list;
@@ -238,7 +238,7 @@ public class BinarySearchTreePractice {
 
     public static void main(String[] args) {
         TreeNode k = new TreeNode(null, null, 20);
-        TreeNode j = new TreeNode(null, null, 14);
+        TreeNode j = new TreeNode(null, null, 15);
         TreeNode i = new TreeNode(j, k, 17);
         TreeNode h = new TreeNode(null, null, 12);
         TreeNode c = new TreeNode(h, i, 13);
@@ -258,13 +258,13 @@ public class BinarySearchTreePractice {
         //        System.out.println("min:" + findMin(root));
         //        System.out.println("max:" + findMax(root));
 
-        insertBSTByLoop(root, 7);
-        ArrayList<ArrayList<String>> lines = printTreeTopToBottomBFS(root);
-        System.out.println(Arrays.toString(lines.toArray()));
+        //        insertBSTByLoop(root, 7);
+        //        ArrayList<ArrayList<String>> lines = printTreeByLinesBFS(root);
+        //        System.out.println(Arrays.toString(lines.toArray()));
 
-        insertBSTByRec(root, 15);
-        ArrayList<ArrayList<String>> lines2 = printTreeTopToBottomBFS(root);
-        System.out.println(Arrays.toString(lines2.toArray()));
+        //        TreeNode temp = insertBSTByRec(root, 11);
+        //        ArrayList<ArrayList<String>> lines2 = printTreeByLinesBFS(temp);
+        //        System.out.println(Arrays.toString(lines2.toArray()));
     }
 
 }

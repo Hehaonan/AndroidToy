@@ -147,6 +147,11 @@ public class BinaryTreePractice {
         // return 1 + Math.min(lDepth, rDepth); // 最小深度
     }
 
+    /**
+     * 打印栈
+     *
+     * @param stack
+     */
     private static void printStack(Stack<TreeNode> stack) {
         // 打印栈的情况
         TreeNode[] array = stack.toArray(new TreeNode[0]);
@@ -268,7 +273,7 @@ public class BinaryTreePractice {
     }
 
     /**
-     * 从上到下打印二叉树
+     * 从上到下打印二叉树，不分行
      *
      * @param root 二叉树根节点
      *
@@ -301,7 +306,7 @@ public class BinaryTreePractice {
      *
      * @return 结果list
      */
-    private static ArrayList<ArrayList<String>> printTreeTopToBottomBFS(TreeNode pRoot) {
+    private static ArrayList<ArrayList<String>> printTreeByLinesBFS(TreeNode pRoot) {
         ArrayList<ArrayList<String>> list = new ArrayList<>();
         if (pRoot == null) {
             return list;
@@ -333,7 +338,7 @@ public class BinaryTreePractice {
      *
      * @return
      */
-    private static ArrayList<ArrayList<String>> printTreeTopToBottomDFS(TreeNode root) {
+    private static ArrayList<ArrayList<String>> printTreeByLinesDFS(TreeNode root) {
         if (root == null)
             return new ArrayList<>();
         ArrayList<ArrayList<String>> list = new ArrayList<>();
@@ -485,10 +490,10 @@ public class BinaryTreePractice {
 
         // ArrayList<String> list = printTreeTopToBottom(root);
         // System.out.println(Arrays.toString(list.toArray()));
-        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomBFS(root);
+        // ArrayList<ArrayList<String>> lines = printTreeByLinesBFS(root);
         // System.out.println(Arrays.toString(lines.toArray()));
 
-        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomDFS(root);
+        // ArrayList<ArrayList<String>> lines = printTreeByLinesDFS(root);
         // System.out.println(Arrays.toString(lines.toArray()));
 
         // TreeNode root2 = new TreeNode(b, f, "C");
