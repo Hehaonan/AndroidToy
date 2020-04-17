@@ -1,6 +1,7 @@
 package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,6 +17,12 @@ public class BinarySearchTreePractice {
         TreeNode left; // 左节点
         TreeNode right; // 右节点
         int value; // 存储的数据 int值
+
+        public TreeNode(int value) {
+            this.left = null;
+            this.right = null;
+            this.value = value;
+        }
 
         public TreeNode(TreeNode left, TreeNode right, int value) {
             this.left = left;
@@ -80,6 +87,32 @@ public class BinarySearchTreePractice {
         root.postOrderTraversal(root);
     }
 
+    // 辅助打印方法
+    private static ArrayList<ArrayList<String>> printTreeByLinesBFS(TreeNode pRoot) {
+        ArrayList<ArrayList<String>> list = new ArrayList<>();
+        if (pRoot == null) {
+            return list;
+        }
+        Queue<TreeNode> queue = new LinkedList<>();
+        queue.offer(pRoot);// 根节点入队列
+        while (!queue.isEmpty()) {
+            int len = queue.size();// 每层的个数
+            ArrayList<String> res = new ArrayList<>();
+            for (int i = 0; i < len; i++) { // 循环同层子节点的个数，实现分组
+                TreeNode node = queue.poll();
+                if (node.left != null) {// 先左后右
+                    queue.offer(node.left);
+                }
+                if (node.right != null) {
+                    queue.offer(node.right);
+                }
+                res.add(node.value + "");// 同层添加到一组
+            }
+            list.add(res);
+        }
+        return list;
+    }
+
     /**
      * 判断BST的合法性
      *
@@ -137,14 +170,14 @@ public class BinarySearchTreePractice {
      *
      * @return
      */
-    private static int findMin(TreeNode root) {
+    private static TreeNode findMin(TreeNode root) {
         if (root == null) {
-            return 0;
+            return null;
         }
         while (root.left != null) {
             root = root.left;
         }
-        return root.value;
+        return root;
     }
 
     /**
@@ -152,14 +185,14 @@ public class BinarySearchTreePractice {
      *
      * @return
      */
-    private static int findMax(TreeNode root) {
+    private static TreeNode findMax(TreeNode root) {
         if (root == null) {
-            return 0;
+            return null;
         }
         while (root.right != null) {
             root = root.right;
         }
-        return root.value;
+        return root;
     }
 
 
@@ -169,7 +202,7 @@ public class BinarySearchTreePractice {
      * @param root
      * @param value
      */
-    private static void insertBSTByLoop(TreeNode root, int value) {
+    private static void insertNodeInBSTByLoop(TreeNode root, int value) {
         if (root == null) { // 空树
             root = new TreeNode(null, null, value);
             return;
@@ -197,44 +230,71 @@ public class BinarySearchTreePractice {
      * @param root
      * @param value
      */
-    private static TreeNode insertBSTByRec(TreeNode root, int value) {
+    private static TreeNode insertNodeInBSTByRec(TreeNode root, int value) {
         if (root == null) { // 空树
             return new TreeNode(null, null, value);
         }
         if (value > root.value) {
-            root.right = insertBSTByRec(root.right, value);
+            root.right = insertNodeInBSTByRec(root.right, value);
         }
         if (value < root.value) {
-            root.left = insertBSTByRec(root.left, value);
+            root.left = insertNodeInBSTByRec(root.left, value);
         }
         return root;
     }
 
-    // 辅助打印方法
-    private static ArrayList<ArrayList<String>> printTreeByLinesBFS(TreeNode pRoot) {
-        ArrayList<ArrayList<String>> list = new ArrayList<>();
-        if (pRoot == null) {
-            return list;
+    /**
+     * BST中删除一个节点，递归实现
+     *
+     * @param root
+     * @param target
+     *
+     * @return
+     */
+    private static TreeNode deleteNodeInBSTByRec(TreeNode root, int target) {
+        if (root == null)
+            return null;
+        // 找到目标节点
+        if (root.value == target) {
+            System.out.println("找到删除的节点:" + root.value);
+            // 情况1:左右都为空、情况2：左右有一个不为空
+            if (root.left == null)
+                return root.right;
+            if (root.right == null)
+                return root.left;
+
+            // 情况3 A：找到左子树找到最大节点
+            TreeNode leftMaxNode = findMax(root.left);// 借助之前的方法
+            System.out.println("需要删除左子树最大节点:" + leftMaxNode.value);
+            root.value = leftMaxNode.value;// 先替换值
+            root.left = deleteNodeInBSTByRec(root.left, leftMaxNode.value);// 再真正的删除节点，最终递归到情况1中
+
+            // 情况3 B：找到右子树找到最小节点 (只需要写一种)
+            // TreeNode rightMinNode = findMin(root.right);// 借助之前的方法
+            // System.out.println("需要删除右子树最小节点:" + leftMaxNode.value);
+            // root.value = rightMinNode.value; // 先替换值
+            // root.right = deleteNodeInBSTByRec(root.right, rightMinNode.value);// 再真正的删除节点，最终递归到情况1中
+
+        } else if (root.value > target) { // 向左，处理未找到的情况
+            root.left = deleteNodeInBSTByRec(root.left, target);
+        } else if (root.value < target) { // 向右，处理未找到的情况，理论上不考虑值相等的情况
+            root.right = deleteNodeInBSTByRec(root.right, target);
         }
-        Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(pRoot);// 根节点入队列
-        while (!queue.isEmpty()) {
-            int len = queue.size();// 每层的个数
-            ArrayList<String> res = new ArrayList<>();
-            for (int i = 0; i < len; i++) { // 循环同层子节点的个数，实现分组
-                TreeNode node = queue.poll();
-                if (node.left != null) {// 先左后右
-                    queue.offer(node.left);
-                }
-                if (node.right != null) {
-                    queue.offer(node.right);
-                }
-                res.add(node.value + "");// 同层添加到一组
-            }
-            list.add(res);
-        }
-        return list;
+        return root;
     }
+
+    /**
+     * BST中删除一个节点，循环实现
+     *
+     * @param root
+     * @param target
+     *
+     * @return
+     */
+    private static void deleteNodeInBSTByLoop(TreeNode root, int target) {
+
+    }
+
 
     public static void main(String[] args) {
         TreeNode k = new TreeNode(null, null, 20);
@@ -255,16 +315,29 @@ public class BinarySearchTreePractice {
         //int target = 14;
         //System.out.println(target + "是否在BTS：" + isInBST(root, target));
 
-        //        System.out.println("min:" + findMin(root));
-        //        System.out.println("max:" + findMax(root));
+        //        System.out.println("min:" + findMin(root).value);
+        //        System.out.println("max:" + findMax(root).value);
 
-        //        insertBSTByLoop(root, 7);
+        //        insertNodeInBSTByLoop(root, 7);
         //        ArrayList<ArrayList<String>> lines = printTreeByLinesBFS(root);
         //        System.out.println(Arrays.toString(lines.toArray()));
-
-        //        TreeNode temp = insertBSTByRec(root, 11);
+        //
+        //        TreeNode temp = insertNodeInBSTByRec(root, 11);
         //        ArrayList<ArrayList<String>> lines2 = printTreeByLinesBFS(temp);
         //        System.out.println(Arrays.toString(lines2.toArray()));
+        printTree(root);
+        deleteNodeInBSTByRec(root, 13);// 注意这里不需要接返回值
+        printTree(root);
+    }
+
+    /**
+     * 打印树
+     *
+     * @param root
+     */
+    private static void printTree(TreeNode root) {
+        ArrayList<ArrayList<String>> lines = printTreeByLinesBFS(root);
+        System.out.println(Arrays.toString(lines.toArray()));
     }
 
 }
