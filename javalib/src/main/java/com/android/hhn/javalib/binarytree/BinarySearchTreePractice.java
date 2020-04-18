@@ -170,7 +170,7 @@ public class BinarySearchTreePractice {
      *
      * @return
      */
-    private static TreeNode findMin(TreeNode root) {
+    private static TreeNode findMinByLoop(TreeNode root) {
         if (root == null) {
             return null;
         }
@@ -180,12 +180,19 @@ public class BinarySearchTreePractice {
         return root;
     }
 
+    private static TreeNode findMinByRec(TreeNode root) {
+        if (root.left == null) {
+            return root;
+        }
+        return findMinByRec(root.left);
+    }
+
     /**
      * @param root
      *
      * @return
      */
-    private static TreeNode findMax(TreeNode root) {
+    private static TreeNode findMaxByLoop(TreeNode root) {
         if (root == null) {
             return null;
         }
@@ -195,6 +202,12 @@ public class BinarySearchTreePractice {
         return root;
     }
 
+    private static TreeNode findMaxByRec(TreeNode root) {
+        if (root.right == null) {
+            return root;
+        }
+        return findMaxByRec(root.right);
+    }
 
     /**
      * BST中插入一个值，循环实现
@@ -264,13 +277,13 @@ public class BinarySearchTreePractice {
                 return root.left;
 
             // 情况3 A：找到左子树找到最大节点
-            TreeNode leftMaxNode = findMax(root.left);// 借助之前的方法
+            TreeNode leftMaxNode = findMaxByLoop(root.left);// 借助之前的方法
             System.out.println("需要删除左子树最大节点:" + leftMaxNode.value);
             root.value = leftMaxNode.value;// 先替换值
             root.left = deleteNodeInBSTByRec(root.left, leftMaxNode.value);// 再真正的删除节点，最终递归到情况1中
 
             // 情况3 B：找到右子树找到最小节点 (只需要写一种)
-            // TreeNode rightMinNode = findMin(root.right);// 借助之前的方法
+            // TreeNode rightMinNode = findMinByLoop(root.right);// 借助之前的方法
             // System.out.println("需要删除右子树最小节点:" + leftMaxNode.value);
             // root.value = rightMinNode.value; // 先替换值
             // root.right = deleteNodeInBSTByRec(root.right, rightMinNode.value);// 再真正的删除节点，最终递归到情况1中
@@ -280,6 +293,7 @@ public class BinarySearchTreePractice {
         } else if (root.value < target) { // 向右，处理未找到的情况，理论上不考虑值相等的情况
             root.right = deleteNodeInBSTByRec(root.right, target);
         }
+        // 如果为找到会返回当前树
         return root;
     }
 
@@ -292,7 +306,60 @@ public class BinarySearchTreePractice {
      * @return
      */
     private static void deleteNodeInBSTByLoop(TreeNode root, int target) {
+        TreeNode rootParent = null; // 标记当前节点的父节点
+        while (root != null && root.value != target) {
+            rootParent = root;// 赋值父节点
+            if (root.value > target) {// value > target 向右 反之 向左
+                root = root.left;
+            } else {
+                root = root.right;
+            }
+        }
+        if (root == null) {// 没有找到
+            System.out.println("当前BST中不包含：" + target);
+            return;
+        }
+        // 情况3：要删除的节点有两个子节点
+        if (root.left != null && root.right != null) {
+            // 情况3 A：查找左子树中最大节点
+            TreeNode leftMaxNode = root.left;// 当前节点的左子树的最大节点
+            TreeNode leftTreeParent = root; // 右子树父节点
+            while (leftMaxNode.right != null) {
+                leftTreeParent = leftMaxNode;// 记录父节点
+                leftMaxNode = leftMaxNode.right;
+            }
+            root.value = leftMaxNode.value; // 将目标节点值替换为左子树最大值
+            root = leftMaxNode;// 移动指针到需要删除的节点
+            rootParent = leftTreeParent; // 这时候rootParent已变成需要删除节点的父节点了
 
+            // 情况3 B：查找右子树中最小节点
+            // TreeNode rightMinNode = root.right;// 当前节点的右子树的最小节点
+            // TreeNode rightTreeParent = root; // 右子树父节点
+            // while (rightMinNode.left != null) {
+            //     rightTreeParent = rightMinNode;// 记录父节点
+            //     rightMinNode = rightMinNode.left;
+            // }
+            // root.value = rightMinNode.value; // 将目标节点值替换为右子树最小值
+            // root = rightMinNode;// 移动指针到需要删除的节点
+            // rootParent = rightTreeParent; // 这时候rootParent已变成需要删除节点的父节点了
+        }
+        // 先处理子集逻辑，后处理全集逻辑，减少操作步骤，所以先处理情况3
+        // 请况2：仅有一个子节点 或 情况1：删除节点是叶子节点
+        TreeNode child; // p的子节点
+        if (root.left != null)
+            child = root.left;
+        else if (root.right != null)
+            child = root.right;
+        else
+            child = null;
+
+        // 最后整理删除节点
+        if (rootParent == null)
+            root = child; // 删除的是根节点
+        else if (rootParent.left == root)
+            rootParent.left = child;
+        else
+            rootParent.right = child;
     }
 
 
@@ -315,8 +382,8 @@ public class BinarySearchTreePractice {
         //int target = 14;
         //System.out.println(target + "是否在BTS：" + isInBST(root, target));
 
-        //        System.out.println("min:" + findMin(root).value);
-        //        System.out.println("max:" + findMax(root).value);
+        //        System.out.println("min:" + findMinByLoop(root).value);
+        //        System.out.println("max:" + findMaxByLoop(root).value);
 
         //        insertNodeInBSTByLoop(root, 7);
         //        ArrayList<ArrayList<String>> lines = printTreeByLinesBFS(root);
@@ -325,8 +392,10 @@ public class BinarySearchTreePractice {
         //        TreeNode temp = insertNodeInBSTByRec(root, 11);
         //        ArrayList<ArrayList<String>> lines2 = printTreeByLinesBFS(temp);
         //        System.out.println(Arrays.toString(lines2.toArray()));
+
         printTree(root);
-        deleteNodeInBSTByRec(root, 13);// 注意这里不需要接返回值
+        // deleteNodeInBSTByRec(root, 13);
+        deleteNodeInBSTByLoop(root, 8);
         printTree(root);
     }
 
