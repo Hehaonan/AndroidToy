@@ -202,6 +202,11 @@ public class BinarySearchTreePractice {
         return root;
     }
 
+    /**
+     * @param root
+     *
+     * @return
+     */
     private static TreeNode findMaxByRec(TreeNode root) {
         if (root.right == null) {
             return root;
