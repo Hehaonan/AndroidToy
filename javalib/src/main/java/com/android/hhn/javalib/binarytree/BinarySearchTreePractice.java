@@ -395,6 +395,35 @@ public class BinarySearchTreePractice {
     }
 
 
+    private static TreeNode head = null; //定义链表当前结点
+    private static TreeNode realHead = null; //定义链表头部的结点
+
+    /**
+     * 将二叉搜索树转换为双向链表
+     * 中序递归遍历修改链表指针即可实现
+     *
+     * @param root
+     *
+     * @return
+     */
+    private static TreeNode convertToDoubleLinkedList(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        convertToDoubleLinkedList(root.left); //左
+        if (head == null) { //根
+            head = root;
+            realHead = root;
+        } else {
+            head.right = root;
+            root.left = head;
+            head = root;// 赋值新的head
+        }
+        convertToDoubleLinkedList(root.right); //右
+        return realHead;
+    }
+
+
     public static void main(String[] args) {
         TreeNode k = new TreeNode(null, null, 20);
         TreeNode j = new TreeNode(null, null, 15);
@@ -409,25 +438,41 @@ public class BinarySearchTreePractice {
         TreeNode b = new TreeNode(d, e, 8);
         TreeNode root = new TreeNode(b, c, 10);
 
-        //System.out.println("是否是BTS：" + isValidBST(root));
+        System.out.println("是否是BTS：" + isValidBST(root));
 
-//        int target = 12;
-//        System.out.println(target + "是否在BTS：" + isInBSTByRec(root, target));
-//        System.out.println(target + "是否在BTS：" + isInBSTByLoop(root, target));
+        // int target = 12;
+        // System.out.println(target + "是否在BTS：" + isInBSTByRec(root, target));
+        // System.out.println(target + "是否在BTS：" + isInBSTByLoop(root, target));
 
-        //        System.out.println("min:" + findMinByLoop(root).value);
-        //        System.out.println("max:" + findMaxByLoop(root).value);
+        // System.out.println("min:" + findMinByLoop(root).value);
+        // System.out.println("max:" + findMaxByLoop(root).value);
 
-        //        insertNodeInBSTByLoop(root, 7);
-        //        printTree(root);
+        // insertNodeInBSTByLoop(root, 7);
+        // printTree(root);
 
-        //        TreeNode temp = insertNodeInBSTByRec(root, 11);
-        //        printTree(temp);
+        // TreeNode temp = insertNodeInBSTByRec(root, 11);
+        // printTree(temp);
 
         // printTree(root);
         // deleteNodeInBSTByRec(root, 13);
         // deleteNodeInBSTByLoop(root, 8);
         // printTree(root);
+
+        TreeNode temp = convertToDoubleLinkedList(root);
+        while (temp != null) {
+            System.out.print(temp.value + "->");
+            if (temp.value == 20) { // 手动停止，为了得到尾结点
+                break;
+            } else {
+                temp = temp.right;
+            }
+        }
+        System.out.println("\n");
+        while (temp != null) { // 从尾结点反向遍历
+            System.out.print(temp.value + "->");
+            temp = temp.left;
+        }
+
     }
 
     /**
