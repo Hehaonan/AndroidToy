@@ -147,22 +147,46 @@ public class BinarySearchTreePractice {
     }
 
     /**
-     * 判断BST中是否存在某值
+     * 判断BST中是否存在某值，递归实现，recursive
      *
      * @param root
      * @param target
      *
      * @return
      */
-    private static boolean isInBST(TreeNode root, int target) {
+    private static boolean isInBSTByRec(TreeNode root, int target) {
         if (null == root) {
             return false;
         }
         if (root.value == target)
             return true;
         if (target > root.value)
-            return isInBST(root.right, target);
-        return isInBST(root.left, target);
+            return isInBSTByRec(root.right, target);
+        return isInBSTByRec(root.left, target);
+    }
+
+    /**
+     * 判断BST中是否存在某值，循环实现
+     *
+     * @param root
+     * @param target
+     *
+     * @return
+     */
+    private static boolean isInBSTByLoop(TreeNode root, int target) {
+        if (null == root) {
+            return false;
+        }
+        while (root != null) {
+            if (root.value == target) {
+                return true;
+            } else if (root.value > target) { // 查找走左子树
+                root = root.left;
+            } else { // root.value < target , 查找走左子树
+                root = root.right;
+            }
+        }
+        return false;
     }
 
     /**
@@ -324,6 +348,7 @@ public class BinarySearchTreePractice {
             System.out.println("当前BST中不包含：" + target);
             return;
         }
+        System.out.println("找到删除的节点:" + root.value);
         // 情况3：要删除的节点有两个子节点
         if (root.left != null && root.right != null) {
             // 情况3 A：查找左子树中最大节点
@@ -334,6 +359,7 @@ public class BinarySearchTreePractice {
                 leftMaxNode = leftMaxNode.right;
             }
             root.value = leftMaxNode.value; // 将目标节点值替换为左子树最大值
+            System.out.println("需要删除左子树最大节点:" + leftMaxNode.value);
             root = leftMaxNode;// 移动指针到需要删除的节点
             rootParent = leftTreeParent; // 这时候rootParent已变成需要删除节点的父节点了
 
@@ -365,6 +391,7 @@ public class BinarySearchTreePractice {
             rootParent.left = child;
         else
             rootParent.right = child;
+        System.out.println("找到删除的节点:" + root.value);
     }
 
 
@@ -384,24 +411,23 @@ public class BinarySearchTreePractice {
 
         //System.out.println("是否是BTS：" + isValidBST(root));
 
-        //int target = 14;
-        //System.out.println(target + "是否在BTS：" + isInBST(root, target));
+//        int target = 12;
+//        System.out.println(target + "是否在BTS：" + isInBSTByRec(root, target));
+//        System.out.println(target + "是否在BTS：" + isInBSTByLoop(root, target));
 
         //        System.out.println("min:" + findMinByLoop(root).value);
         //        System.out.println("max:" + findMaxByLoop(root).value);
 
         //        insertNodeInBSTByLoop(root, 7);
-        //        ArrayList<ArrayList<String>> lines = printTreeByLinesBFS(root);
-        //        System.out.println(Arrays.toString(lines.toArray()));
-        //
-        //        TreeNode temp = insertNodeInBSTByRec(root, 11);
-        //        ArrayList<ArrayList<String>> lines2 = printTreeByLinesBFS(temp);
-        //        System.out.println(Arrays.toString(lines2.toArray()));
+        //        printTree(root);
 
-        printTree(root);
+        //        TreeNode temp = insertNodeInBSTByRec(root, 11);
+        //        printTree(temp);
+
+        // printTree(root);
         // deleteNodeInBSTByRec(root, 13);
-        deleteNodeInBSTByLoop(root, 8);
-        printTree(root);
+        // deleteNodeInBSTByLoop(root, 8);
+        // printTree(root);
     }
 
     /**
