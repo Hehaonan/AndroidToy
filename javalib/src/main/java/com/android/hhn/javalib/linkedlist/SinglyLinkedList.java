@@ -31,11 +31,60 @@ public class SinglyLinkedList {
      * @param head
      */
     private static void printLinkedList(Node head) {
+        if (head == null) {
+            System.out.println("链表为空");
+            return;
+        }
         while (head != null) {
-            System.out.print(head.data + "->");
+            System.out.print(head.data + "(" + head.value + ")" + "->");
             head = head.next;
         }
         System.out.println();
+    }
+
+    /**
+     * 打印节点
+     *
+     * @param node
+     */
+    private static void printNode(Node node) {
+        if (node == null) {
+            System.out.println("节点为空");
+            return;
+        }
+        System.out.println(node.data + "(" + node.value + ")");
+    }
+
+    /**
+     * 通过 data 查找 Node
+     *
+     * @param head
+     * @param data
+     *
+     * @return
+     */
+    private static Node findByValue(Node head, String data) {
+        while (head != null && head.data != data) {
+            head = head.next;
+        }
+        return head;
+    }
+
+    /**
+     * 通过位置查找
+     *
+     * @param head
+     * @param index
+     *
+     * @return
+     */
+    private static Node findByIndex(Node head, int index) {
+        int tempIndex = 0;
+        while (head != null && tempIndex != index) {
+            head = head.next;
+            ++tempIndex;
+        }
+        return head;
     }
 
     public static void main(String[] args) {
@@ -48,7 +97,11 @@ public class SinglyLinkedList {
         Node b = new Node("B", c);
         Node head = new Node("A", b);
 
-        printLinkedList(head);
+        // printLinkedList(head);
+
+        printNode(findByValue(head, "G"));
+        printNode(findByIndex(head, 4));
+
     }
 
 }
