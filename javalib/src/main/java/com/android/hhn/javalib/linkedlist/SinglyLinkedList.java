@@ -155,6 +155,7 @@ public class SinglyLinkedList {
                     break;
                 }
             }
+            // temp 为目标前一个节点
             if (temp.next == null || !temp.next.data.equals(target.data)) {
                 System.out.println(target.data + "节点未找到！");
                 return null;
@@ -175,6 +176,36 @@ public class SinglyLinkedList {
         return head;
     }
 
+    /**
+     * @param head
+     * @param target
+     *
+     * @return
+     */
+    private static Node deleteNode(Node head, Node target) {
+        if (target == null || head == null)
+            return null;
+        if (target.data.equals(head.data)) { //删除head
+            head = head.next;
+            return head;
+        }
+        Node temp = head;
+        while (!temp.next.data.equals(target.data)) {
+            temp = temp.next;
+            if (temp.next == null) { // 代表循环到链表尾部，防止空指针
+                break;
+            }
+        }
+        // temp 为目标前一个节点
+        if (temp.next == null || !temp.next.data.equals(target.data)) {
+            System.out.println("未找到：" + target.data);
+            return null;
+        }
+        temp.next = temp.next.next;
+        return head;
+    }
+
+
     public static void main(String[] args) {
         Node h = new Node("H", null);
         Node g = new Node("G", h);
@@ -193,7 +224,8 @@ public class SinglyLinkedList {
         // printLinkedList(insertToHead(head, new Node("S", null)));
         // printLinkedList(insertToTail(head, new Node("Z", null)));
 
-        printLinkedList(insertBeforeAndAfter(head, new Node("E", null), new Node("X", null)));
+        // printLinkedList(insertBeforeAndAfter(head, new Node("E", null), new Node("X", null)));
+        // printLinkedList(deleteNode(head, new Node("B", null)));
 
     }
 
