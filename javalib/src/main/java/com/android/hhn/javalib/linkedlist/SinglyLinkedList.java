@@ -87,6 +87,94 @@ public class SinglyLinkedList {
         return head;
     }
 
+    /**
+     * 链表头部插入
+     *
+     * @param head
+     * @param newNode
+     *
+     * @return
+     */
+    private static Node insertToHead(Node head, Node newNode) {
+        if (head == null) { // 空链表
+            head = newNode;
+        } else {
+            newNode.next = head;// newNode指向head结点
+            head = newNode; // head 变成 newNode
+        }
+        return head;
+    }
+
+    /**
+     * 链表尾部插入
+     *
+     * @param head
+     * @param newNode
+     */
+    private static Node insertToTail(Node head, Node newNode) {
+        if (head == null) { // 空链表
+            head = newNode;
+        } else {
+            Node temp = head;
+            while (temp.next != null) {
+                temp = temp.next;
+            }
+            temp.next = newNode;// 尾结点指向newNode
+        }
+        return head;
+    }
+
+    /**
+     * 在目标节点前、后添加新节点
+     * 先根据target找到真正的操作节点，先后插，在前插
+     *
+     * @param head    链表头结点
+     * @param target  目标节点（用于找到节点不是真正链表中的节点，可以直接传值）
+     * @param newNode 新的节点
+     *
+     * @return
+     */
+    private static Node insertBeforeAndAfter(Node head, Node target, Node newNode) {
+        if (target == null || newNode == null) {
+            System.out.println("参数不合法啊");
+            return null;
+        }
+        if (head == null) {
+            head = newNode;
+        } else if (head.data.equals(target.data)) { // head结点
+            Node newAfterNode = new Node(newNode.data, null);
+            newAfterNode.next = head.next;
+            head.next = newAfterNode;
+            newNode.next = head;
+            return newNode;
+        } else {
+            Node temp = head;// 临时节点
+            while (!temp.next.data.equals(target.data)) { //下个节点的值不能等于target
+                temp = temp.next;
+                if (temp.next == null) { // 代表循环到链表尾部，防止空指针
+                    break;
+                }
+            }
+            if (temp.next == null || !temp.next.data.equals(target.data)) {
+                System.out.println(target.data + "节点未找到！");
+                return null;
+            }
+            Node realTarget = temp.next;
+            System.out.print("真正的目标节点：");
+            printNode(realTarget);
+            System.out.print(realTarget.data + "的前节点：");
+            printNode(temp);
+            // 后插 不影响前续指针
+            Node newAfterNode = new Node(newNode.data, null);
+            newAfterNode.next = realTarget.next;
+            realTarget.next = newAfterNode;
+            // 前插 会影响后续指针
+            newNode.next = temp.next;
+            temp.next = newNode;
+        }
+        return head;
+    }
+
     public static void main(String[] args) {
         Node h = new Node("H", null);
         Node g = new Node("G", h);
@@ -99,8 +187,13 @@ public class SinglyLinkedList {
 
         // printLinkedList(head);
 
-        printNode(findByValue(head, "G"));
-        printNode(findByIndex(head, 4));
+        // printNode(findByValue(head, "G"));
+        // printNode(findByIndex(head, 4));
+
+        // printLinkedList(insertToHead(head, new Node("S", null)));
+        // printLinkedList(insertToTail(head, new Node("Z", null)));
+
+        printLinkedList(insertBeforeAndAfter(head, new Node("E", null), new Node("X", null)));
 
     }
 
