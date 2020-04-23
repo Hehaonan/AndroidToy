@@ -181,6 +181,7 @@ public class BinaryTreePractice {
             printStack(stack);
             TreeNode top = stack.peek();
             // 栈顶节点的左或者右，不等于之前访问的节点，代表该路径没有走过
+            // left、right为null 代表循环到了树的叶节点
             if (top.left != null && lastVisit != top.left && lastVisit != top.right) {
                 stack.push(top.left);// 先左后右
             } else if (top.right != null && lastVisit != top.right) {
@@ -365,11 +366,11 @@ public class BinaryTreePractice {
      *
      * @return
      */
-    private static boolean hasSubtree(TreeNode root1, TreeNode root2) {
+    private static boolean isSubtree(TreeNode root1, TreeNode root2) {
         if (root1 == null || root2 == null) {
             return false;
         }
-        return isSame(root1, root2) || hasSubtree(root1.left, root2) || hasSubtree(root1.right, root2);
+        return isSame(root1, root2) || isSubtree(root1.left, root2) || isSubtree(root1.right, root2);
     }
 
     private static boolean isSame(TreeNode root1, TreeNode root2) {
