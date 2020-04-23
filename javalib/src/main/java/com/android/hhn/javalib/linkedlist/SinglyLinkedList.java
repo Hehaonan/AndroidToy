@@ -205,6 +205,24 @@ public class SinglyLinkedList {
         return head;
     }
 
+    /**
+     * 单链表反转
+     *
+     * @param head
+     *
+     * @return
+     */
+    private static Node reverseLinkedList(Node head) {
+        Node curr = head, pre = null;
+        while (curr != null) {
+            Node next = curr.next;// 记录next
+            curr.next = pre; // 当前节点的下个节点为前节点
+            pre = curr; // 更新前节点
+            curr = next; // 更新循环使用的 next指针
+        }
+        return pre;
+    }
+
 
     public static void main(String[] args) {
         Node h = new Node("H", null);
@@ -226,6 +244,8 @@ public class SinglyLinkedList {
 
         // printLinkedList(insertBeforeAndAfter(head, new Node("E", null), new Node("X", null)));
         // printLinkedList(deleteNode(head, new Node("B", null)));
+
+        printLinkedList(reverseLinkedList(head));
 
     }
 
