@@ -223,6 +223,26 @@ public class SinglyLinkedList {
         return pre;// pre是一个新的链表
     }
 
+    /**
+     * 检测链表是否有环
+     *
+     * @param head
+     *
+     * @return
+     */
+    private static boolean checkHasCircle(Node head) {
+        if (head == null)
+            return false;
+        Node fast = head.next; //fast在slow前一个
+        Node slow = head;
+        while (fast != null && fast.next != null) { // 无环到尾结点就停止
+            fast = fast.next.next;// fast每次前进两个
+            slow = slow.next;// slow每次前进一个
+            if (slow == fast) // 节点相同代表有环，停止循环
+                return true;
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         Node h = new Node("H", null);
@@ -245,8 +265,10 @@ public class SinglyLinkedList {
         // printLinkedList(insertBeforeAndAfter(head, new Node("E", null), new Node("X", null)));
         // printLinkedList(deleteNode(head, new Node("B", null)));
 
-        printLinkedList(reverseLinkedList(head));
+        // printLinkedList(reverseLinkedList(head));
 
+        h.next = head;
+        System.out.println("是否有环：" + checkHasCircle(head));
     }
 
 }
