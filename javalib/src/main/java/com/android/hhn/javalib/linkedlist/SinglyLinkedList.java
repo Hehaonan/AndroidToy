@@ -215,12 +215,12 @@ public class SinglyLinkedList {
     private static Node reverseLinkedList(Node head) {
         Node curr = head, pre = null;
         while (curr != null) {
-            Node next = curr.next;// 记录next
-            curr.next = pre; // 当前节点的下个节点为前节点
-            pre = curr; // 更新前节点
-            curr = next; // 更新循环使用的 next指针
+            Node next = curr.next;// 记录真正的next
+            curr.next = pre;// 当前节点的next节点，先指向pre才能反转，且不影响cur
+            pre = curr; // 更新前节点，为pre赋值
+            curr = next; // 更新循环使用的next指针
         }
-        return pre;
+        return pre;// pre是一个新的链表
     }
 
 
