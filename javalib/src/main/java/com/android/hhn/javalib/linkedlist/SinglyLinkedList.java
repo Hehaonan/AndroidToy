@@ -136,7 +136,7 @@ public class SinglyLinkedList {
      */
     private static LinkedNode insertBeforeAndAfter(LinkedNode head, LinkedNode target, LinkedNode newNode) {
         if (target == null || newNode == null) {
-            System.out.println("参数不合法啊");
+            System.out.println("参数不合法");
             return null;
         }
         if (head == null) {
@@ -278,6 +278,50 @@ public class SinglyLinkedList {
         return newHead.next;
     }
 
+    /**
+     * 找出链表倒数第k个节点，k>=1
+     *
+     * @param head 链表头部
+     * @param k    第k个节点
+     *
+     * @return 倒数第k个节点
+     */
+    private static LinkedNode findKthNodeFormTail(LinkedNode head, int k) {
+        if (head == null || k < 1) {
+            System.out.println("参数不合法");
+            return null;
+        }
+        // 关键理解：k - 1 ，这个差距是 第k个节点到尾部的距离
+        // 快指针 先走 k-1 个距离 记录位置
+        LinkedNode fast = head;
+        for (int i = 0; i < k - 1; ++i) {
+            if (fast.next != null) {
+                fast = fast.next;
+            } else { // 都为空了 说明没找到
+                System.out.println("k超过链表长度");
+                return null;
+            }
+        }
+        // 慢指针再从头走，当fast走到尾部时，slow就是我们找的节点
+        // slow 到 fast的差距 就是 k-1
+        LinkedNode slow = head;
+        LinkedNode kPre = null; // k的前节点
+        while (fast.next != null) {
+            fast = fast.next; // 两个指针同时移动
+            slow = slow.next;
+            // 这里可以找到k的前节点，可以用于删除
+            if (fast.next != null && fast.next.next == null) {
+                System.out.println("倒数K个节点的前节点：");
+                printNode(slow);
+                kPre = slow;
+            }
+        }
+        // 逻辑删除
+        kPre.next = slow.next;
+        printLinkedList(head);
+        return slow;
+    }
+
     public static void main(String[] args) {
         LinkedNode h = new LinkedNode("H", null);
         LinkedNode g = new LinkedNode("G", h);
@@ -313,6 +357,7 @@ public class SinglyLinkedList {
         //        LinkedNode B = new LinkedNode("B", D);
         //        printLinkedList(mergedTwoLinked(A, B));
 
+        //  printNode(findKthNodeFormTail(head, 3));
 
     }
 
