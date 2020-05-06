@@ -160,6 +160,7 @@ public class SinglyLinkedList {
                 System.out.println(target.data + "节点未找到！");
                 return null;
             }
+            // 真正的目标节点
             Node realTarget = temp.next;
             System.out.print("真正的目标节点：");
             printNode(realTarget);
@@ -170,7 +171,7 @@ public class SinglyLinkedList {
             newAfterNode.next = realTarget.next;
             realTarget.next = newAfterNode;
             // 前插 会影响后续指针
-            newNode.next = temp.next;
+            newNode.next = realTarget;
             temp.next = newNode;
         }
         return head;
@@ -262,7 +263,7 @@ public class SinglyLinkedList {
         // printLinkedList(insertToHead(head, new Node("S", null)));
         // printLinkedList(insertToTail(head, new Node("Z", null)));
 
-        // printLinkedList(insertBeforeAndAfter(head, new Node("E", null), new Node("X", null)));
+        // printLinkedList(insertBeforeAndAfter(head, new Node("H", null), new Node("X", null)));
         // printLinkedList(deleteNode(head, new Node("B", null)));
 
         // printLinkedList(reverseLinkedList(head));
