@@ -322,6 +322,26 @@ public class SinglyLinkedList {
         return slow;
     }
 
+    /**
+     * 求中间结点
+     *
+     * @param head
+     *
+     * @return
+     */
+    private static LinkedNode findMidInLinkedList(LinkedNode head) {
+        if (head == null)
+            return null;
+        LinkedNode fast = head;
+        LinkedNode slow = head;
+        // 每次 slow 都在 fast 走过的中间位置
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next; // fast 每次走两个
+            slow = slow.next; // 慢指针每次走一个
+        }
+        return slow;
+    }
+
     public static void main(String[] args) {
         LinkedNode h = new LinkedNode("H", null);
         LinkedNode g = new LinkedNode("G", h);
@@ -358,6 +378,8 @@ public class SinglyLinkedList {
         //        printLinkedList(mergedTwoLinked(A, B));
 
         //  printNode(findKthNodeFormTail(head, 3));
+
+        printNode(findMidInLinkedList(head));
 
     }
 
