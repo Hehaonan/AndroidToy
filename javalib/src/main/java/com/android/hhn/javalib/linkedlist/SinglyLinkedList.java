@@ -245,6 +245,39 @@ public class SinglyLinkedList {
         return false;
     }
 
+    /**
+     * 合并两个有序链表
+     *
+     * @param l1
+     * @param l2
+     *
+     * @return
+     */
+    private static LinkedNode mergedTwoLinked(LinkedNode l1, LinkedNode l2) {
+        // 利用哨兵结点简化实现难度 构建一个新head
+        LinkedNode newHead = new LinkedNode(0, null);
+        LinkedNode pos = newHead; // 代表指针 会移动到链表结尾
+
+        while (l1 != null && l2 != null) {
+            if (l1.value < l2.value) {
+                pos.next = l1;
+                l1 = l1.next;
+            } else {
+                pos.next = l2;
+                l2 = l2.next;
+            }
+            pos = pos.next;
+        }
+
+        if (l1 != null) {
+            pos.next = l1;
+        }
+        if (l2 != null) {
+            pos.next = l2;
+        }
+        return newHead.next;
+    }
+
     public static void main(String[] args) {
         LinkedNode h = new LinkedNode("H", null);
         LinkedNode g = new LinkedNode("G", h);
@@ -255,21 +288,32 @@ public class SinglyLinkedList {
         LinkedNode b = new LinkedNode("B", c);
         LinkedNode head = new LinkedNode("A", b);
 
-        printLinkedList(head);
+        //        printLinkedList(head);
 
-        printNode(findByValue(head, "G"));
-        printNode(findByIndex(head, 4));
+        //        printNode(findByValue(head, "G"));
+        //        printNode(findByIndex(head, 4));
 
-        printLinkedList(insertToHead(head, new LinkedNode("S", null)));
-        printLinkedList(insertToTail(head, new LinkedNode("Z", null)));
+        //        printLinkedList(insertToHead(head, new LinkedNode("S", null)));
+        //        printLinkedList(insertToTail(head, new LinkedNode("Z", null)));
 
-        printLinkedList(insertBeforeAndAfter(head, new LinkedNode("H", null), new LinkedNode("X", null)));
-        printLinkedList(deleteNode(head, new LinkedNode("B", null)));
+        //        printLinkedList(insertBeforeAndAfter(head, new LinkedNode("H", null), new LinkedNode("X", null)));
+        //        printLinkedList(deleteNode(head, new LinkedNode("B", null)));
 
-        printLinkedList(reverseLinkedList(head));
+        //        printLinkedList(reverseLinkedList(head));
 
-        h.next = head;
-        System.out.println("是否有环：" + checkHasCircle(head));
+        //        h.next = head;
+        //        System.out.println("是否有环：" + checkHasCircle(head));
+
+        //        LinkedNode E = new LinkedNode("E", null);
+        //        LinkedNode C = new LinkedNode("C", E);
+        //        LinkedNode A = new LinkedNode("A", C);
+        //
+        //        LinkedNode F = new LinkedNode("F", g);
+        //        LinkedNode D = new LinkedNode("D", F);
+        //        LinkedNode B = new LinkedNode("B", D);
+        //        printLinkedList(mergedTwoLinked(A, B));
+
+
     }
 
 }
