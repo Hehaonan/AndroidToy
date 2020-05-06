@@ -8,18 +8,18 @@ package com.android.hhn.javalib.linkedlist;
  */
 public class SinglyLinkedList {
 
-    public static class Node {
+    public static class LinkedNode {
         public String data;
         public int value;
-        public Node next;
+        public LinkedNode next;
 
-        public Node(String data, Node next) {
+        public LinkedNode(String data, LinkedNode next) {
             this.data = data;
             this.next = next;
             this.value = data.isEmpty() ? 0 : data.charAt(0);
         }
 
-        public Node(int value, Node next) {
+        public LinkedNode(int value, LinkedNode next) {
             this.value = value;
             this.next = next;
         }
@@ -30,7 +30,7 @@ public class SinglyLinkedList {
      *
      * @param head
      */
-    private static void printLinkedList(Node head) {
+    private static void printLinkedList(LinkedNode head) {
         if (head == null) {
             System.out.println("链表为空");
             return;
@@ -47,7 +47,7 @@ public class SinglyLinkedList {
      *
      * @param node
      */
-    private static void printNode(Node node) {
+    private static void printNode(LinkedNode node) {
         if (node == null) {
             System.out.println("节点为空");
             return;
@@ -63,7 +63,7 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static Node findByValue(Node head, String data) {
+    private static LinkedNode findByValue(LinkedNode head, String data) {
         while (head != null && head.data != data) {
             head = head.next;
         }
@@ -78,7 +78,7 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static Node findByIndex(Node head, int index) {
+    private static LinkedNode findByIndex(LinkedNode head, int index) {
         int tempIndex = 0;
         while (head != null && tempIndex != index) {
             head = head.next;
@@ -95,7 +95,7 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static Node insertToHead(Node head, Node newNode) {
+    private static LinkedNode insertToHead(LinkedNode head, LinkedNode newNode) {
         if (head == null) { // 空链表
             head = newNode;
         } else {
@@ -111,11 +111,11 @@ public class SinglyLinkedList {
      * @param head
      * @param newNode
      */
-    private static Node insertToTail(Node head, Node newNode) {
+    private static LinkedNode insertToTail(LinkedNode head, LinkedNode newNode) {
         if (head == null) { // 空链表
             head = newNode;
         } else {
-            Node temp = head;
+            LinkedNode temp = head;
             while (temp.next != null) {
                 temp = temp.next;
             }
@@ -134,7 +134,7 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static Node insertBeforeAndAfter(Node head, Node target, Node newNode) {
+    private static LinkedNode insertBeforeAndAfter(LinkedNode head, LinkedNode target, LinkedNode newNode) {
         if (target == null || newNode == null) {
             System.out.println("参数不合法啊");
             return null;
@@ -142,13 +142,13 @@ public class SinglyLinkedList {
         if (head == null) {
             head = newNode;
         } else if (head.data.equals(target.data)) { // head结点
-            Node newAfterNode = new Node(newNode.data, null);
+            LinkedNode newAfterNode = new LinkedNode(newNode.data, null);
             newAfterNode.next = head.next;
             head.next = newAfterNode;
             newNode.next = head;
             return newNode;
         } else {
-            Node temp = head;// 临时节点
+            LinkedNode temp = head;// 临时节点
             while (!temp.next.data.equals(target.data)) { //下个节点的值不能等于target
                 temp = temp.next;
                 if (temp.next == null) { // 代表循环到链表尾部，防止空指针
@@ -161,13 +161,13 @@ public class SinglyLinkedList {
                 return null;
             }
             // 真正的目标节点
-            Node realTarget = temp.next;
+            LinkedNode realTarget = temp.next;
             System.out.print("真正的目标节点：");
             printNode(realTarget);
             System.out.print(realTarget.data + "的前节点：");
             printNode(temp);
             // 后插 不影响前续指针
-            Node newAfterNode = new Node(newNode.data, null);
+            LinkedNode newAfterNode = new LinkedNode(newNode.data, null);
             newAfterNode.next = realTarget.next;
             realTarget.next = newAfterNode;
             // 前插 会影响后续指针
@@ -183,14 +183,14 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static Node deleteNode(Node head, Node target) {
+    private static LinkedNode deleteNode(LinkedNode head, LinkedNode target) {
         if (target == null || head == null)
             return null;
         if (target.data.equals(head.data)) { //删除head
             head = head.next;
             return head;
         }
-        Node temp = head;
+        LinkedNode temp = head;
         while (!temp.next.data.equals(target.data)) {
             temp = temp.next;
             if (temp.next == null) { // 代表循环到链表尾部，防止空指针
@@ -213,10 +213,10 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static Node reverseLinkedList(Node head) {
-        Node curr = head, pre = null;
+    private static LinkedNode reverseLinkedList(LinkedNode head) {
+        LinkedNode curr = head, pre = null;
         while (curr != null) {
-            Node next = curr.next;// 记录真正的next
+            LinkedNode next = curr.next;// 记录真正的next
             curr.next = pre;// 当前节点的next节点，先指向pre才能反转，且不影响cur
             pre = curr; // 更新前节点，为pre赋值
             curr = next; // 更新循环使用的next指针
@@ -231,11 +231,11 @@ public class SinglyLinkedList {
      *
      * @return
      */
-    private static boolean checkHasCircle(Node head) {
+    private static boolean checkHasCircle(LinkedNode head) {
         if (head == null)
             return false;
-        Node fast = head.next; //fast在slow前一个
-        Node slow = head;
+        LinkedNode fast = head.next; //fast在slow前一个
+        LinkedNode slow = head;
         while (fast != null && fast.next != null) { // 无环到尾结点就停止
             fast = fast.next.next;// fast每次前进两个
             slow = slow.next;// slow每次前进一个
@@ -246,27 +246,27 @@ public class SinglyLinkedList {
     }
 
     public static void main(String[] args) {
-        Node h = new Node("H", null);
-        Node g = new Node("G", h);
-        Node f = new Node("F", g);
-        Node e = new Node("E", f);
-        Node d = new Node("D", e);
-        Node c = new Node("C", d);
-        Node b = new Node("B", c);
-        Node head = new Node("A", b);
+        LinkedNode h = new LinkedNode("H", null);
+        LinkedNode g = new LinkedNode("G", h);
+        LinkedNode f = new LinkedNode("F", g);
+        LinkedNode e = new LinkedNode("E", f);
+        LinkedNode d = new LinkedNode("D", e);
+        LinkedNode c = new LinkedNode("C", d);
+        LinkedNode b = new LinkedNode("B", c);
+        LinkedNode head = new LinkedNode("A", b);
 
-        // printLinkedList(head);
+        printLinkedList(head);
 
-        // printNode(findByValue(head, "G"));
-        // printNode(findByIndex(head, 4));
+        printNode(findByValue(head, "G"));
+        printNode(findByIndex(head, 4));
 
-        // printLinkedList(insertToHead(head, new Node("S", null)));
-        // printLinkedList(insertToTail(head, new Node("Z", null)));
+        printLinkedList(insertToHead(head, new LinkedNode("S", null)));
+        printLinkedList(insertToTail(head, new LinkedNode("Z", null)));
 
-        // printLinkedList(insertBeforeAndAfter(head, new Node("H", null), new Node("X", null)));
-        // printLinkedList(deleteNode(head, new Node("B", null)));
+        printLinkedList(insertBeforeAndAfter(head, new LinkedNode("H", null), new LinkedNode("X", null)));
+        printLinkedList(deleteNode(head, new LinkedNode("B", null)));
 
-        // printLinkedList(reverseLinkedList(head));
+        printLinkedList(reverseLinkedList(head));
 
         h.next = head;
         System.out.println("是否有环：" + checkHasCircle(head));
