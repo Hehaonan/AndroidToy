@@ -15,6 +15,7 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -56,75 +57,81 @@ public class TestTooLargeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), TestTooLargeActivity.class);
                 intent.putExtras(getBundle());
-                //                for (String key : intent.getExtras().keySet()) {
-                //                    Log.d(TAG, key + "->");
-                //                }
 
-                //                Parcel data = Parcel.obtain();
-                //                intent.writeToParcel(data, 0);
-                //                int intentSize = data.dataSize();
-                //                Log.d(TAG, "传递前 intentSize :--------> " + intentSize);
-                getBundleSize("传递前 :--------> ", intent.getExtras());
+                // Parcel data = Parcel.obtain();
+                // intent.writeToParcel(data, 0);
+                // int intentSize = data.dataSize();
+                // Log.d(TAG, "传递前 intentSize :--------> " + intentSize);
+                boolean judge = isBundleSizeTooLarge("传递前 :--------> ", intent.getExtras());
                 // Log.d(TAG, "传递前 :--------> " + intent.getExtras().toString());
-
-                startActivity(intent);
+                if (!judge) {
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(TestTooLargeActivity.this, "TransactionTooLargeException", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (intent != null && bundle != null) {
-            Parcel data = Parcel.obtain();
-            intent.writeToParcel(data, 0);
-            int intentSize = data.dataSize();
-            Log.d(TAG, "传递后 : intent size " + intentSize);
-            //Log.d(TAG, "传递后 : bundle size " + bundle.toString());
-            getBundleSize("传递后 ", bundle);
+            // Parcel data = Parcel.obtain();
+            // intent.writeToParcel(data, 0);
+            // int intentSize = data.dataSize();
+            // Log.d(TAG, "传递后 : intent size " + intentSize);
+
+            // 传递完之后bundle序列化过 就有真实大小了
+            // Log.d(TAG, "传递后 : bundle size " + bundle.toString());
+            isBundleSizeTooLarge("传递后 ", bundle);
         }
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void getBundleSize(String pos, Bundle bundle) {
+    private boolean isBundleSizeTooLarge(String pos, Bundle bundle) {
         if (bundle != null) {
             long start = System.nanoTime();
             Parcel data = Parcel.obtain();
             bundle.writeToParcel(data, 0);
             int dataSize = data.dataSize();
-            Log.d(TAG, pos + ": bundle size 1 " + dataSize);
+            Log.d(TAG, pos + ": bundle 原始 size ：" + dataSize);
 
-            Bundle bundle1 = bundle.deepCopy();
-            Parcel data2 = Parcel.obtain();
-            bundle1.writeToParcel(data2, 0);
-            int dataSize2 = data2.dataSize();
-            Log.d(TAG, pos + ": deepCopy size " + dataSize2);
+            // Android O API=26 以上才有这个方法 需要处理
+            Bundle copyBundle = bundle.deepCopy();
+            Parcel deepData = Parcel.obtain();
+            copyBundle.writeToParcel(deepData, 0);
+            int realSize = deepData.dataSize();
+            Log.d(TAG, pos + ": bundle 传递前原始 size ：" + realSize);
+
+            if (realSize > 512 * 1024) {// 大于512k
+                return true;
+            }
 
             long end = System.nanoTime();
             long diff = end - start;
             DecimalFormat df = new DecimalFormat("0.00");
             String s = df.format((double) diff / 1000000L);
-            Log.d(TAG, pos + "getBundleSize耗时: 纳秒 " + diff);
-            Log.d(TAG, pos + "getBundleSize耗时: 毫秒 " + s);
+            // Log.d(TAG, pos + "getBundleSize耗时: 纳秒 " + diff);
+            Log.d(TAG, pos + ": getBundleSize耗时：" + s + " 毫秒 ");// 耗时有点过分 需要异步处理
+            Log.d(TAG, pos + ": 当前页面：" + this.getLocalClassName());
 
-            Log.d(TAG, pos + "getBundleSize: " + this.getLocalClassName());
-
-            //            try {
-            //                Constructor constructor = Bundle.class.getDeclaredConstructor(android.os.Parcel.class);
-            //                constructor.setAccessible(true);
-            //                Bundle temp = (Bundle) constructor.newInstance(data);
-            //                Log.d(TAG, "反射: " + temp.toString());
-            //            } catch (NoSuchMethodException e) {
-            //                e.printStackTrace();
-            //            } catch (IllegalAccessException e) {
-            //                e.printStackTrace();
-            //            } catch (InstantiationException e) {
-            //                e.printStackTrace();
-            //            } catch (InvocationTargetException e) {
-            //                e.printStackTrace();
-            //            }
+            // try { // 反射调用 Bundle(Parcel parcelledData) 行不通
+            //     Constructor constructor = Bundle.class.getDeclaredConstructor(android.os.Parcel.class);
+            //     constructor.setAccessible(true);
+            //     Bundle temp = (Bundle) constructor.newInstance(data);
+            //     Log.d(TAG, "反射: " + temp.toString());
+            // } catch (NoSuchMethodException e) {
+            //     e.printStackTrace();
+            // } catch (IllegalAccessException e) {
+            //     e.printStackTrace();
+            // } catch (InstantiationException e) {
+            //     e.printStackTrace();
+            // } catch (InvocationTargetException e) {
+            //     e.printStackTrace();
+            // }
 
             try {
                 Method m = bundle.getClass().getMethod("getSize");
-                Log.d(TAG, pos + ": bundle size 2 " + m.invoke(bundle, null));
+                Log.d(TAG, pos + ": bundle 传递前原始 size：" + m.invoke(bundle, null));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -132,12 +139,8 @@ public class TestTooLargeActivity extends AppCompatActivity {
             } catch (InvocationTargetException e) {
                 e.printStackTrace();
             }
-
         }
-
-
-        //int getSize = ReflectUtils.invokeMethod(bundle.getClass(), "getSize");
-        //Log.d(TAG, pos + "getBundleSize getSize: " + getSize);
+        return false;
     }
 
     private Bundle getBundle() {
@@ -167,45 +170,11 @@ public class TestTooLargeActivity extends AppCompatActivity {
                 "transactions are of moderate size.\n" +
                 "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
 
-        //        bundle.putString("bundle4", "The Binder transaction failed because it was too large.\n" +
-        //                "During a remote procedure call, the arguments and the return value of the call are transferred as Parcel objects stored
-        //                in the " +
-        //                "Binder transaction buffer. If the arguments or the return value are too large to fit in the transaction buffer, then the
-        //                call will" +
-        //                " fail and TransactionTooLargeException will be thrown.\n" +
-        //                "The Binder transaction buffer has a limited fixed size, currently 1Mb, which is shared by all transactions in progress
-        //                for the " +
-        //                "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the
-        //                individual " +
-        //                "transactions are of moderate size.\n" +
-        //                "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。");
-        //        bundle.putString("bundle2", "The Binder transaction failed because it was too large.\n" +
-        //                "During a remote procedure call, the arguments and the return value of the call are transferred as Parcel objects stored
-        //                in the " +
-        //                "Binder transaction buffer. If the arguments or the return value are too large to fit in the transaction buffer, then the
-        //                call will" +
-        //                " fail and TransactionTooLargeException will be thrown.\n" +
-        //                "The Binder transaction buffer has a limited fixed size, currently 1Mb, which is shared by all transactions in progress
-        //                for the " +
-        //                "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the
-        //                individual " +
-        //                "transactions are of moderate size.\n" +
-        //                "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。");
-        //        bundle.putString("bundle3", "The Binder transaction failed because it was too large.\n" +
-        //                "During a remote procedure call, the arguments and the return value of the call are transferred as Parcel objects stored
-        //                in the " +
-        //                "Binder transaction buffer. If the arguments or the return value are too large to fit in the transaction buffer, then the
-        //                call will" +
-        //                " fail and TransactionTooLargeException will be thrown.\n" +
-        //                "The Binder transaction buffer has a limited fixed size, currently 1Mb, which is shared by all transactions in progress
-        //                for the " +
-        //                "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the
-        //                individual " +
-        //                "transactions are of moderate size.\n" +
-        //                "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。");
-
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
         bundle.putParcelable("bitmap", bitmap);
+
+        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
+        bundle.putParcelable("bitmap2", bitmap2);
 
         //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
         //        bundle.putParcelable("bitmap2", bitmap2);
