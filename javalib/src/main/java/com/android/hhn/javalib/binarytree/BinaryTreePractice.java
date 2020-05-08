@@ -182,6 +182,7 @@ public class BinaryTreePractice {
             TreeNode top = stack.peek();
             // 栈顶节点的左或者右，不等于之前访问的节点，代表该路径没有走过
             // left、right为null 代表循环到了树的叶节点
+            System.out.println("top:" + top.data);
             if (top.left != null && lastVisit != top.left && lastVisit != top.right) {
                 stack.push(top.left);// 先左后右
             } else if (top.right != null && lastVisit != top.right) {

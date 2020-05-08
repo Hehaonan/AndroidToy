@@ -93,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
+                //showDialog();
+                Intent intent = new Intent(getApplicationContext(), TestTooLargeActivity.class);
+                startActivity(intent);
             }
         });
 
