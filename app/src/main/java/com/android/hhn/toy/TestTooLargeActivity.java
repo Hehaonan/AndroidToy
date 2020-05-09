@@ -2,7 +2,6 @@ package com.android.hhn.toy;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -41,9 +40,9 @@ public class TestTooLargeActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        //outState.putAll(getBundle());
-        //getBundleSize("onSaveInstanceState", outState);
+        Log.d(TAG, "onSaveInstanceState: ");
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
@@ -57,12 +56,11 @@ public class TestTooLargeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), TestTooLargeActivity.class);
                 intent.putExtras(getBundle());
-
                 // Parcel data = Parcel.obtain();
                 // intent.writeToParcel(data, 0);
                 // int intentSize = data.dataSize();
                 // Log.d(TAG, "传递前 intentSize :--------> " + intentSize);
-                boolean judge = isBundleSizeTooLarge("传递前 :--------> ", intent.getExtras());
+                boolean judge = isBundleSizeTooLarge(" --- 传递前 ---> ", intent);
                 // Log.d(TAG, "传递前 :--------> " + intent.getExtras().toString());
                 if (!judge) {
                     startActivity(intent);
@@ -81,15 +79,16 @@ public class TestTooLargeActivity extends AppCompatActivity {
 
             // 传递完之后bundle序列化过 就有真实大小了
             // Log.d(TAG, "传递后 : bundle size " + bundle.toString());
-            isBundleSizeTooLarge("传递后 ", bundle);
+            isBundleSizeTooLarge("传递后 ", intent);
         }
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private boolean isBundleSizeTooLarge(String pos, Bundle bundle) {
-        if (bundle != null) {
+    private boolean isBundleSizeTooLarge(String pos, Intent intent) {
+        if (intent != null && intent.getExtras() != null) {
             long start = System.nanoTime();
+            Bundle bundle = intent.getExtras();
             Parcel data = Parcel.obtain();
             bundle.writeToParcel(data, 0);
             int dataSize = data.dataSize();
@@ -112,7 +111,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
             String s = df.format((double) diff / 1000000L);
             // Log.d(TAG, pos + "getBundleSize耗时: 纳秒 " + diff);
             Log.d(TAG, pos + ": getBundleSize耗时：" + s + " 毫秒 ");// 耗时有点过分 需要异步处理
-            Log.d(TAG, pos + ": 当前页面：" + this.getLocalClassName());
+            Log.d(TAG, pos + ": 当前页面：" + intent.getComponent().getClassName());
 
             // try { // 反射调用 Bundle(Parcel parcelledData) 行不通
             //     Constructor constructor = Bundle.class.getDeclaredConstructor(android.os.Parcel.class);
@@ -131,7 +130,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
 
             try {
                 Method m = bundle.getClass().getMethod("getSize");
-                Log.d(TAG, pos + ": bundle 传递前原始 size：" + m.invoke(bundle, null));
+                Log.d(TAG, pos + ": bundle 原始 size，反射法：" + m.invoke(bundle, null));
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {
@@ -153,28 +152,12 @@ public class TestTooLargeActivity extends AppCompatActivity {
                 "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the individual " +
                 "transactions are of moderate size.\n" +
                 "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
-        bundle.putString("bundle2", "The Binder transaction failed because it was too large.\n" +
-                "During a remote procedure call, the arguments and the return value of the call are transferred as Parcel objects stored in the " +
-                "Binder transaction buffer. If the arguments or the return value are too large to fit in the transaction buffer, then the call will" +
-                " fail and TransactionTooLargeException will be thrown.\n" +
-                "The Binder transaction buffer has a limited fixed size, currently 1Mb, which is shared by all transactions in progress for the " +
-                "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the individual " +
-                "transactions are of moderate size.\n" +
-                "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
-        bundle.putString("bundle3", "The Binder transaction failed because it was too large.\n" +
-                "During a remote procedure call, the arguments and the return value of the call are transferred as Parcel objects stored in the " +
-                "Binder transaction buffer. If the arguments or the return value are too large to fit in the transaction buffer, then the call will" +
-                " fail and TransactionTooLargeException will be thrown.\n" +
-                "The Binder transaction buffer has a limited fixed size, currently 1Mb, which is shared by all transactions in progress for the " +
-                "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the individual " +
-                "transactions are of moderate size.\n" +
-                "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
 
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
-        bundle.putParcelable("bitmap", bitmap);
+//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
+//        bundle.putParcelable("bitmap", bitmap);
 
-        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
-        bundle.putParcelable("bitmap2", bitmap2);
+        //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
+        //        bundle.putParcelable("bitmap2", bitmap2);
 
         //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
         //        bundle.putParcelable("bitmap2", bitmap2);
