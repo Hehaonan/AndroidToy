@@ -25,6 +25,14 @@ public class SinglyLinkedList {
         }
     }
 
+    private static LinkedNode getNewNode(int value, LinkedNode node) {
+        return new LinkedNode(value, node);
+    }
+
+    private static LinkedNode getNewNode(String data, LinkedNode node) {
+        return new LinkedNode(data, node);
+    }
+
     /**
      * 打印链表
      *
@@ -36,7 +44,8 @@ public class SinglyLinkedList {
             return;
         }
         while (head != null) {
-            System.out.print(head.data + "(" + head.value + ")" + "->");
+
+            System.out.print((head.data != null ? head.data : "") + "(" + head.value + ")" + "->");
             head = head.next;
         }
         System.out.println();
@@ -342,6 +351,32 @@ public class SinglyLinkedList {
         return slow;
     }
 
+    /**
+     * 有序链表删除重复节点
+     *
+     * @param head
+     *
+     * @return
+     */
+    private static LinkedNode removeDuplicateNode(LinkedNode head) {
+        if (null == head) {
+            return null;
+        }
+        LinkedNode slow = head;
+        LinkedNode fast = head.next;
+        while (fast != null) {
+            // 遇到不重复的节点
+            if (slow.value != fast.value) {
+                slow.next = fast;// 记录下fast的值
+                slow = slow.next;// 移动slow的指针
+            }
+            fast = fast.next;
+        }
+        // 断开后面所有的节点
+        slow.next = null;
+        return head;
+    }
+
     public static void main(String[] args) {
         LinkedNode h = new LinkedNode("H", null);
         LinkedNode g = new LinkedNode("G", h);
@@ -379,7 +414,11 @@ public class SinglyLinkedList {
 
         //  printNode(findKthNodeFormTail(head, 3));
 
-        printNode(findMidInLinkedList(head));
+        // printNode(findMidInLinkedList(head));
+
+        LinkedNode test = new LinkedNode(1, getNewNode(1, getNewNode(2, getNewNode(2, getNewNode(3, null)))));
+        printLinkedList(test);
+        printLinkedList(removeDuplicateNode(test));
 
     }
 
