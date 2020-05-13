@@ -1,5 +1,7 @@
 package com.android.hhn.javalib;
 
+import java.text.DecimalFormat;
+
 /**
  * Author: haonan.he ;<p/>
  * Date: 2020/4/14,5:59 PM ;<p/>
@@ -18,14 +20,14 @@ public class Fibonacci {
         if (num < 1 || num > 92)
             return 0;
         long pre = 1;
-        long next = 1;
-        long temp;
+        long curr = 1;
+        long sum; // 累加值
         for (int i = 3; i <= num; i++) {
-            temp = pre;
-            pre = next;
-            next = next + temp;
+            sum = pre + curr;
+            pre = curr;
+            curr = sum;
         }
-        return next;
+        return curr;
     }
 
     /**
@@ -69,18 +71,19 @@ public class Fibonacci {
     }
 
     public static void main(String[] args) {
+        DecimalFormat df = new DecimalFormat("0.00");
         int num = 40;
-        long start = System.currentTimeMillis();
+        long start = System.nanoTime();
         System.out.println(fibLoop(num));
-        System.out.println(System.currentTimeMillis() - start);
+        System.out.println(df.format((System.nanoTime() - start) / 1000000D));
 
-        long start2 = System.currentTimeMillis();
+        long start2 = System.nanoTime();
         System.out.println(fibRec(num));
-        System.out.println(System.currentTimeMillis() - start2);
+        System.out.println(df.format((System.nanoTime() - start2) / 1000000D));
 
-        long start3 = System.currentTimeMillis();
+        long start3 = System.nanoTime();
         System.out.println(testFibCacheRec(num));
-        System.out.println(System.currentTimeMillis() - start3);
+        System.out.println(df.format((System.nanoTime() - start3) / 1000000D));
     }
 
 }
