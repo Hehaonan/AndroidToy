@@ -2,6 +2,7 @@ package com.android.hhn.toy;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -108,8 +109,8 @@ public class TestTooLargeActivity extends AppCompatActivity {
             long end = System.nanoTime();
             long diff = end - start;
             DecimalFormat df = new DecimalFormat("0.00");
-            String s = df.format((double) diff / 1000000L);
-            // Log.d(TAG, pos + "getBundleSize耗时: 纳秒 " + diff);
+            String s = df.format(diff / 1000000D);
+            Log.d(TAG, pos + ": bundle ----> kb size ：" + Double.parseDouble(df.format(realSize / 1024D)));
             Log.d(TAG, pos + ": getBundleSize耗时：" + s + " 毫秒 ");// 耗时有点过分 需要异步处理
             Log.d(TAG, pos + ": 当前页面：" + intent.getComponent().getClassName());
 
@@ -153,8 +154,8 @@ public class TestTooLargeActivity extends AppCompatActivity {
                 "transactions are of moderate size.\n" +
                 "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
 
-//        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
-//        bundle.putParcelable("bitmap", bitmap);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
+        bundle.putParcelable("bitmap", bitmap);
 
         //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
         //        bundle.putParcelable("bitmap2", bitmap2);
