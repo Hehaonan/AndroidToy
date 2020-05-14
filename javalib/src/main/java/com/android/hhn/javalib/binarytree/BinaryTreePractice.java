@@ -108,6 +108,21 @@ public class BinaryTreePractice {
     }
 
     /**
+     * 计算有多少个节点
+     *
+     * @param root
+     *
+     * @return
+     */
+    private static int countTreeNode(TreeNode root) {
+        if (null == root) { // 终止条件
+            return 0;
+        }
+        return 1 + countTreeNode(root.left) + countTreeNode(root.right);
+    }
+
+
+    /**
      * 判断两棵树是否相同
      *
      * @param root1
@@ -480,7 +495,8 @@ public class BinaryTreePractice {
 
         //        System.out.println(treeDepth(root));
         //        System.out.println("深度：" + treeDepthByLoop(root));
-        System.out.println("深度：" + treeDepthByStack(root));
+
+        // System.out.println("深度：" + treeDepthByStack(root));
 
         //        findPath(root, 19);
         //        for (ArrayList<String> temp : res) {
@@ -503,13 +519,15 @@ public class BinaryTreePractice {
 
         // System.out.println(isBalanced(root));
 
-        //        TreeNode root1 = new TreeNode(f, g, "A");
-        //        TreeNode root2 = new TreeNode(g, f, "A");
-        //        System.out.println(isMirroredTree(root1, root2));
+        // TreeNode root1 = new TreeNode(f, g, "A");
+        // TreeNode root2 = new TreeNode(g, f, "A");
+        // System.out.println(isMirroredTree(root1, root2));
 
-        //        getTreeMirrored(root);
-        //        ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
-        //        System.out.println(Arrays.toString(lines.toArray()));
+        // getTreeMirrored(root);
+        // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
+        // System.out.println(Arrays.toString(lines.toArray()));
+
+        System.out.println(countTreeNode(root));
     }
 
 }
