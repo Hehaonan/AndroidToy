@@ -3,6 +3,7 @@ package com.android.hhn.javalib.binarytree;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 /**
@@ -423,6 +424,45 @@ public class BinarySearchTreePractice {
         return realHead;
     }
 
+    /**
+     * 找到第K个小的节点
+     *
+     * @param root 根节点
+     * @param k    第k个，k>=1
+     *
+     * @return
+     */
+    private static TreeNode getKthSmallestNode(TreeNode root, int k) {
+        if (null == root || k <= 0) {
+            System.out.println("参数不合法");
+            return null;
+        }
+        List<TreeNode> result = new ArrayList<>();
+        inOrderTraversal(root, result, k);
+        if (result.isEmpty() || k > result.size()) {
+            return null;
+        }
+        return result.get(k - 1);
+    }
+
+    /**
+     * @param root   节点
+     * @param result 结果
+     * @param k      kth
+     */
+    private static void inOrderTraversal(TreeNode root, List<TreeNode> result, int k) {
+        if (root == null) {
+            return;
+        }
+        if (result.size() == k) {
+            return;
+        }
+        inOrderTraversal(root.left, result, k);
+        if (result.size() < k) {
+            result.add(root);
+        }
+        inOrderTraversal(root.right, result, k);
+    }
 
     public static void main(String[] args) {
         TreeNode k = new TreeNode(null, null, 20);
@@ -438,7 +478,7 @@ public class BinarySearchTreePractice {
         TreeNode b = new TreeNode(d, e, 8);
         TreeNode root = new TreeNode(b, c, 10);
 
-        System.out.println("是否是BTS：" + isValidBST(root));
+        // System.out.println("是否是BTS：" + isValidBST(root));
 
         // int target = 12;
         // System.out.println(target + "是否在BTS：" + isInBSTByRec(root, target));
@@ -458,21 +498,31 @@ public class BinarySearchTreePractice {
         // deleteNodeInBSTByLoop(root, 8);
         // printTree(root);
 
-        TreeNode temp = convertToDoubleLinkedList(root);
-        while (temp != null) {
-            System.out.print(temp.value + "->");
-            if (temp.value == 20) { // 手动停止，为了得到尾结点
-                break;
-            } else {
-                temp = temp.right;
-            }
-        }
-        System.out.println("\n");
-        while (temp != null) { // 从尾结点反向遍历
-            System.out.print(temp.value + "->");
-            temp = temp.left;
-        }
+        // TreeNode temp = convertToDoubleLinkedList(root);
+        // while (temp != null) {
+        //     System.out.print(temp.value + "->");
+        //     if (temp.value == 20) { // 手动停止，为了得到尾结点
+        //         break;
+        //     } else {
+        //         temp = temp.right;
+        //     }
+        // }
+        // System.out.println("\n");
+        // while (temp != null) { // 从尾结点反向遍历
+        //     System.out.print(temp.value + "->");
+        //     temp = temp.left;
+        // }
 
+        printTreeNode(getKthSmallestNode(root, 4));
+
+    }
+
+    private static void printTreeNode(TreeNode node) {
+        if (null == node) {
+            System.out.println("node is null");
+        } else {
+            System.out.println("node.value=" + node.value);
+        }
     }
 
     /**
