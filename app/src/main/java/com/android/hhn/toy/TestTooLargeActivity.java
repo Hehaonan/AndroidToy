@@ -1,5 +1,7 @@
 package com.android.hhn.toy;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -30,6 +32,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
     private int[] mProcessIds;
     private AppBarConfiguration mAppBarConfiguration;
     private TextView mTextView;
+    private TextView mClearTaskTv;
     private int quitClickCount;
     private Handler mHandler = new Handler();
 
@@ -82,6 +85,27 @@ public class TestTooLargeActivity extends AppCompatActivity {
             // Log.d(TAG, "传递后 : bundle size " + bundle.toString());
             isBundleSizeTooLarge("传递后 ", intent);
         }
+        mClearTaskTv = findViewById(R.id.clear_task_tv);
+        mClearTaskTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog mNetTipDialog = new AlertDialog.Builder(TestTooLargeActivity.this)
+                        .setTitle("提示").setMessage("很抱歉，您打开的页面太多，无法打开新的页面，请点击“返回首页”后重新操作。")
+                        .setPositiveButton("返回首页", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent();
+                                intent.setClassName(getApplicationContext(), "com.android.hhn.toy.MainActivity");
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                                dialog.dismiss();
+                            }
+                        }).create();
+                mNetTipDialog.setCancelable(false);
+                mNetTipDialog.setCanceledOnTouchOutside(false);
+                mNetTipDialog.show();
+            }
+        });
     }
 
 

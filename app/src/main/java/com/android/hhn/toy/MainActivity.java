@@ -89,11 +89,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_main2);
-        mTextView = findViewById(R.id.main_tv);
+        mTextView = findViewById(R.id.showDialog_tv);
         mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // showDialog();
+                showDialog();
+            }
+        });
+        findViewById(R.id.jumpTo_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), TestTooLargeActivity.class);
                 startActivity(intent);
             }
@@ -277,20 +282,20 @@ public class MainActivity extends AppCompatActivity {
 
                 AlertDialog mNetTipDialog = new AlertDialog.Builder(MainActivity.this)
                         .setTitle("提示").setMessage("测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊！！！")
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
+                        //                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        //                            @Override
+                        //                            public void onClick(DialogInterface dialog, int which) {
+                        //                                dialog.dismiss();
+                        //                            }
+                        //                        })
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         }).create();
-                mNetTipDialog.setCancelable(false);
-                mNetTipDialog.setCanceledOnTouchOutside(false);
+                mNetTipDialog.setCancelable(true);
+                mNetTipDialog.setCanceledOnTouchOutside(true);
                 mNetTipDialog.show();
             }
         });

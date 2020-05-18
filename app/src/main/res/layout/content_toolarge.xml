@@ -13,4 +13,16 @@
         android:textColor="@color/spider_black_212121_text_color"
         android:textSize="20dp" />
 
+    <TextView
+        android:id="@+id/clear_task_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/main_tv"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:padding="10dp"
+        android:text="clearTaskToMain"
+        android:textColor="@color/spider_black_212121_text_color"
+        android:textSize="20dp" />
+
 </RelativeLayout>
