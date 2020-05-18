@@ -396,8 +396,8 @@ public class BinarySearchTreePractice {
     }
 
 
-    private static TreeNode head = null; //定义链表当前结点
-    private static TreeNode realHead = null; //定义链表头部的结点
+    private static TreeNode headPos = null; //链表指针
+    private static TreeNode realHead = null; //定义链表真正的头结点
 
     /**
      * 将二叉搜索树转换为双向链表
@@ -412,13 +412,13 @@ public class BinarySearchTreePractice {
             return null;
         }
         convertToDoubleLinkedList(root.left); //左
-        if (head == null) { //根
-            head = root;
+        if (headPos == null) { // 中序遍历第一个节点
+            headPos = root;
             realHead = root;
-        } else {
-            head.right = root;
-            root.left = head;
-            head = root;// 赋值新的head
+        } else { // 从第二个节点思考
+            headPos.right = root; // 设置左右
+            root.left = headPos;
+            headPos = root;// 赋值新的head
         }
         convertToDoubleLinkedList(root.right); //右
         return realHead;
