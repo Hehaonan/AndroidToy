@@ -2,6 +2,7 @@ package com.android.hhn.javalib.binarytree;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Stack;
 
@@ -528,6 +529,25 @@ public class BinaryTreePractice {
         // System.out.println(Arrays.toString(lines.toArray()));
 
         System.out.println(countTreeNode(root));
+
+//        Stack<TreeNode> stack = new Stack<>();
+//        stack.push(d);
+//        stack.push(e);
+//        stack.push(f);
+//        System.out.println(Arrays.toString(new ArrayList<>(getUsedStackList(stack)).toArray()));
     }
+
+    private static List<String> getUsedStackList(Stack<TreeNode> stack) {
+        if (stack == null || stack.isEmpty()) {
+            return null;
+        }
+        List<String> hybridIds = new ArrayList<>();
+        TreeNode[] stackArr = stack.toArray(new TreeNode[0]);
+        for (TreeNode t : stackArr) {
+            hybridIds.add("\"" + t.data + "\"");
+        }
+        return hybridIds;
+    }
+
 
 }
