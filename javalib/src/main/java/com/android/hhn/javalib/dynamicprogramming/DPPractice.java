@@ -1,5 +1,7 @@
 package com.android.hhn.javalib.dynamicprogramming;
 
+import java.util.Arrays;
+
 /**
  * Author: haonan.he ;<p/>
  * Date: 2020/5/14,6:29 PM ;<p/>
@@ -46,8 +48,34 @@ public class DPPractice {
         return dp[n - 1][m - 1];
     }
 
+    /**
+     * 零钱兑换问题
+     *
+     * @param coins
+     * @param amount
+     *
+     * @return
+     */
+    private static int coinChange(int[] coins, int amount) {
+        int[] dp = new int[amount + 1];
+        Arrays.fill(dp, amount);
+        dp[0] = 0;
+        System.out.println(Arrays.toString(dp));
+        for (int i = 1; i <= amount; i++) { // 每个金额
+            for (int j = 0; j < coins.length; j++) { // 面值
+                if (i - coins[j] >= 0) {
+                    dp[i] = Math.min(dp[i - coins[j]] + 1, dp[i]);
+                }
+            }
+        }
+        System.out.println(Arrays.toString(dp));
+        return dp[amount] == amount ? -1 : dp[amount];
+    }
+
     public static void main(String[] args) {
         System.out.println(throughSquareStepsRec(4, 5));
         System.out.println(throughSquareStepsDP(4, 5));
+        int[] coins = {1, 2, 5};
+        System.out.println(coinChange(coins, 20));
     }
 }
