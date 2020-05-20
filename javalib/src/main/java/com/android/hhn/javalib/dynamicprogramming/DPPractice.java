@@ -1,6 +1,8 @@
 package com.android.hhn.javalib.dynamicprogramming;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Author: haonan.he ;<p/>
@@ -72,10 +74,52 @@ public class DPPractice {
         return dp[amount] == amount ? -1 : dp[amount];
     }
 
+
+    /**
+     * 三角形二维数组，寻找最小路径，递归法
+     *
+     * @param triangle
+     *
+     * @return
+     */
+    private static int findMinPathRec(List<List<Integer>> triangle) {
+        return recursion(0, 0, triangle);
+    }
+
+    private static int recursion(int level, int c, List<List<Integer>> triangle) {
+        if (level == triangle.size() - 1) {
+            return triangle.get(level).get(c);
+        }
+        int left = recursion(level + 1, c, triangle);
+        int right = recursion(level + 1, c + 1, triangle);
+        return Math.min(left, right) + triangle.get(level).get(c);
+    }
+
     public static void main(String[] args) {
-        System.out.println(throughSquareStepsRec(4, 5));
-        System.out.println(throughSquareStepsDP(4, 5));
-        int[] coins = {1, 2, 5};
-        System.out.println(coinChange(coins, 20));
+        //        System.out.println(throughSquareStepsRec(4, 5));
+        //        System.out.println(throughSquareStepsDP(4, 5));
+        //        int[] coins = {1, 2, 5};
+        //        System.out.println(coinChange(coins, 20));
+
+        List<Integer> list1 = new ArrayList<>();
+        list1.add(2);
+        List<Integer> list2 = new ArrayList<>();
+        list2.add(3);
+        list2.add(4);
+        List<Integer> list3 = new ArrayList<>();
+        list3.add(6);
+        list3.add(5);
+        list3.add(7);
+        List<Integer> list4 = new ArrayList<>();
+        list4.add(4);
+        list4.add(1);
+        list4.add(8);
+        list4.add(3);
+        List<List<Integer>> triangle = new ArrayList<>();
+        triangle.add(list1);
+        triangle.add(list2);
+        triangle.add(list3);
+        triangle.add(list4);
+        System.out.println(findMinPathRec(triangle));
     }
 }
