@@ -528,13 +528,24 @@ public class BinaryTreePractice {
         // ArrayList<ArrayList<String>> lines = printTreeTopToBottomByLine(root);
         // System.out.println(Arrays.toString(lines.toArray()));
 
-        System.out.println(countTreeNode(root));
+        // System.out.println(countTreeNode(root));
 
-//        Stack<TreeNode> stack = new Stack<>();
-//        stack.push(d);
-//        stack.push(e);
-//        stack.push(f);
-//        System.out.println(Arrays.toString(new ArrayList<>(getUsedStackList(stack)).toArray()));
+        Stack<TreeNode> stack = new Stack<>();
+        stack.push(d);
+        stack.push(e);
+        stack.push(f);
+        stack.push(g);
+        Stack<TreeNode> temp = (Stack<TreeNode>) stack.clone();
+        for (int i = 0; i < temp.size(); i++) {
+            TreeNode t = temp.get(i);
+            if (i < 2) {
+                stack.remove(t);
+            } else {
+                System.out.println(t.data);
+            }
+        }
+        printStack(stack);
+        // System.out.println(Arrays.toString(new ArrayList<>(getUsedStackList(stack)).toArray()));
     }
 
     private static List<String> getUsedStackList(Stack<TreeNode> stack) {
@@ -548,6 +559,5 @@ public class BinaryTreePractice {
         }
         return hybridIds;
     }
-
 
 }
