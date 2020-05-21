@@ -82,7 +82,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
             // Log.d(TAG, "传递后 : intent size " + intentSize);
 
             // 传递完之后bundle序列化过 就有真实大小了
-            // Log.d(TAG, "传递后 : bundle size " + bundle.toString());
+            Log.d(TAG, "传递后 >>>>>> : bundle size " + bundle.toString());
             isBundleSizeTooLarge("传递后 ", intent);
         }
         mClearTaskTv = findViewById(R.id.clear_task_tv);
@@ -112,6 +112,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private boolean isBundleSizeTooLarge(String pos, Intent intent) {
         if (intent != null && intent.getExtras() != null) {
+            DecimalFormat df = new DecimalFormat("0.00");
             long start = System.nanoTime();
             Bundle bundle = intent.getExtras();
             Parcel data = Parcel.obtain();
@@ -120,11 +121,14 @@ public class TestTooLargeActivity extends AppCompatActivity {
             Log.d(TAG, pos + ": bundle 原始 size ：" + dataSize);
 
             // Android O API=26 以上才有这个方法 需要处理
+            long temp = System.nanoTime();
             Bundle copyBundle = bundle.deepCopy();
+            Log.d(TAG, pos + ": deepCopy耗时 >>>>>>>>>>>：" + df.format(((System.nanoTime() - temp)) / 1000000D) + " 毫秒 ");
             Parcel deepData = Parcel.obtain();
             copyBundle.writeToParcel(deepData, 0);
             int realSize = deepData.dataSize();
-            Log.d(TAG, pos + ": bundle 传递前原始 size ：" + realSize);
+            Log.d(TAG, pos + ": writeToParcel耗时 >>>>>>>>>>>：" + df.format(((System.nanoTime() - temp)) / 1000000D) + " 毫秒 ");
+            Log.d(TAG, pos + ": bundle deepCopy size ：" + realSize);
 
             if (realSize > 512 * 1024) {// 大于512k
                 return true;
@@ -132,7 +136,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
 
             long end = System.nanoTime();
             long diff = end - start;
-            DecimalFormat df = new DecimalFormat("0.00");
+
             String s = df.format(diff / 1000000D);
             Log.d(TAG, pos + ": bundle ----> kb size ：" + Double.parseDouble(df.format(realSize / 1024D)));
             Log.d(TAG, pos + ": getBundleSize耗时：" + s + " 毫秒 ");// 耗时有点过分 需要异步处理
