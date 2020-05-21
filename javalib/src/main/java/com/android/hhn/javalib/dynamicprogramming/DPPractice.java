@@ -74,6 +74,15 @@ public class DPPractice {
         return dp[amount] == amount ? -1 : dp[amount];
     }
 
+    // 递推推到过程：
+    //    recursion(int level, int pos, arrays[][]) {
+    //        if (level == arrays.size - 1) {
+    //            return arrays[level][pos] //返回倒数第二层的数值 终止递归
+    //        }
+    //        int left = recursion(level + 1, pos, arrays)
+    //        int right = recursion(level + 1, pos + 1, arrays)
+    //        return Min(cur, next) + arrays[level][pos]// +最有一层的所有值
+    //    }
 
     /**
      * 三角形二维数组，寻找最小路径，递归法
@@ -93,6 +102,31 @@ public class DPPractice {
         int left = recursion(level + 1, c, triangle);
         int right = recursion(level + 1, c + 1, triangle);
         return Math.min(left, right) + triangle.get(level).get(c);
+    }
+
+    /**
+     * 三角形二维数组，寻找最小路径，DP法
+     *
+     * @param triangle
+     *
+     * @return
+     */
+    private static int findMinPathDP(List<List<Integer>> triangle) {
+        if (null == triangle || triangle.isEmpty()) {
+            System.out.println("参数不合法");
+            return -1;
+        }
+        int row = triangle.size(); // 原始行数
+        int[][] dp = new int[row + 1][row + 1]; // 二维数组需要行、列+1，因为要处理i、j+1
+        // 优化：可以只需要维数组记录最值，二维数组方便推到DP公式
+        for (int i = triangle.size() - 1; i >= 0; i--) {
+            List<Integer> rows = triangle.get(i);
+            for (int j = 0; j < rows.size(); j++) {
+                // DP公式
+                dp[i][j] = Math.min(dp[i + 1][j], dp[i + 1][j + 1]) + rows.get(j); // rows.get(j)代表自身的值
+            }
+        }
+        return dp[0][0];
     }
 
     public static void main(String[] args) {
@@ -121,5 +155,6 @@ public class DPPractice {
         triangle.add(list3);
         triangle.add(list4);
         System.out.println(findMinPathRec(triangle));
+        System.out.println(findMinPathDP(triangle));
     }
 }
