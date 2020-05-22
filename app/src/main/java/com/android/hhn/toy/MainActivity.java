@@ -31,6 +31,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.hhn.toy.ac.TestTooLargeActivity;
 import com.android.hhn.toy.jobscheduler.MyJobService;
 
 import java.io.BufferedReader;
@@ -42,12 +43,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import androidx.navigation.ui.AppBarConfiguration;
 
@@ -91,6 +86,7 @@ public class MainActivity extends AppCompatActivity {
         System.exit(0);
     }
 
+    @RequiresApi(api = 30)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,50 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
         getAppExitInfo();
 
-        ThreadPoolUtils poolUtils = new ThreadPoolUtils();
-        poolUtils.execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "run: 1");
-            }
-        });
-        poolUtils.execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d(TAG, "run: 2");
-            }
-        });
     }
 
     private String getStr() {
         return null;
-    }
-
-    private static class ThreadPoolUtils {
-        private static final BlockingQueue<Runnable> sPoolWorkQueue = new LinkedBlockingQueue();
-        private static final ThreadFactory sThreadFactory = new ThreadFactory() {
-            private final AtomicInteger mCount = new AtomicInteger(1);
-
-            public Thread newThread(Runnable r) {
-                return new Thread(r, "basectx #" + this.mCount.getAndIncrement());
-            }
-        };
-
-        private static ThreadPoolExecutor executor;
-
-        static {
-            executor = new ThreadPoolExecutor(1, 2, 10, TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
-            executor.allowCoreThreadTimeOut(true);
-            Log.d(TAG, "static initializer: ");
-        }
-
-        public ThreadPoolUtils() {
-            Log.d(TAG, "ThreadPoolUtils: init");
-        }
-
-        private void execute(Runnable runnable) {
-            executor.execute(runnable);
-        }
     }
 
     /**
@@ -165,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = 30)
     private void getAppExitInfo() {
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ApplicationExitInfo> exitInfoList = am.getHistoricalProcessExitReasons(this.getPackageName(), Process.myPid(), 10);
+        Log.d(TAG, "getAppExitInfo: " + Process.myPid());
+        List<ApplicationExitInfo> exitInfoList = am.getHistoricalProcessExitReasons(this.getPackageName(), 30553, 1);
         if (exitInfoList != null && !exitInfoList.isEmpty()) {
             for (ApplicationExitInfo info : exitInfoList) {
                 Log.d(TAG, "getAppExitInfo: " + info.getReason());

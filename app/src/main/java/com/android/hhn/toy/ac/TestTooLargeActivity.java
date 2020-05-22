@@ -1,4 +1,4 @@
-package com.android.hhn.toy;
+package com.android.hhn.toy.ac;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.hhn.toy.R;
 
 import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
