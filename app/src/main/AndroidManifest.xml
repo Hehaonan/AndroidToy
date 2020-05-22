@@ -9,9 +9,9 @@
 
     <application
         android:allowBackup="true"
-        android:requestLegacyExternalStorage="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -20,20 +20,27 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".ac.TestTooLargeActivity"
+            android:name=".ac.TestBundleTooLargeActivity"
             android:configChanges="orientation"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="TestBundleTooLarge" />
+
+        <activity
+            android:name=".ac.TestScopeStorageActivity"
+            android:configChanges="orientation"
+            android:label="TestScopeStorage" />
+
+        <activity
+            android:name=".ac.TestProcessExitInfoActivity"
+            android:configChanges="orientation"
+            android:label="TestProcessExitInfo" />
 
         <service
             android:name=".jobscheduler.MyJobService"

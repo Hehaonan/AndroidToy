@@ -2,7 +2,6 @@ package com.android.hhn.toy;
 
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.ApplicationExitInfo;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.ActivityNotFoundException;
@@ -15,9 +14,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
-import android.os.Process;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableStringBuilder;
@@ -31,29 +28,55 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.hhn.toy.ac.TestTooLargeActivity;
+import com.android.hhn.toy.ac.TestBundleTooLargeActivity;
+import com.android.hhn.toy.ac.TestProcessExitInfoActivity;
+import com.android.hhn.toy.ac.TestScopeStorageActivity;
 import com.android.hhn.toy.jobscheduler.MyJobService;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.util.List;
-
-import androidx.navigation.ui.AppBarConfiguration;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "AndroidToy";
+    private static final String TAG = "MainActivity";
     private int[] mProcessIds;
-    private AppBarConfiguration mAppBarConfiguration;
     private TextView mTextView;
     private int quitClickCount;
     private Handler mHandler = new Handler();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.ac_main);
+        mTextView = findViewById(R.id.showDialog_tv);
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        });
+        findViewById(R.id.bundle_too_large_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TestBundleTooLargeActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.scope_storage_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TestScopeStorageActivity.class);
+                startActivity(intent);
+            }
+        });
+        findViewById(R.id.process_exit_info_tv).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), TestProcessExitInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+        getPidByProcessName(getApplicationContext());
+    }
 
     @Override
     public void onBackPressed() {
@@ -73,150 +96,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void quitApp() {
-        //finish();
-        if (null != mProcessIds && mProcessIds.length > 0) {
-            Log.d(TAG, "quitApp length: " + mProcessIds.length);
-            for (int pid : mProcessIds) {
-                Log.d(TAG, "quitApp: kill " + pid);
-                Process.killProcess(mProcessIds[0]);
-            }
-        } else {
-            Process.killProcess(Process.myPid());
-        }
+//        if (null != mProcessIds && mProcessIds.length > 0) {
+//            Log.d(TAG, "quitApp length: " + mProcessIds.length);
+//            for (int pid : mProcessIds) {
+//                Log.d(TAG, "quitApp: kill " + pid);
+//                Process.killProcess(mProcessIds[0]);
+//            }
+//        } else {
+//            Process.killProcess(Process.myPid());
+//        }
         System.exit(0);
-    }
-
-    @RequiresApi(api = 30)
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_main2);
-        mTextView = findViewById(R.id.showDialog_tv);
-        mTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialog();
-                getStr().length();
-            }
-        });
-        findViewById(R.id.jumpTo_tv).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TestTooLargeActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        getAppExitInfo();
-
-    }
-
-    private String getStr() {
-        return null;
-    }
-
-    /**
-     * 获取崩溃信息
-     */
-    @RequiresApi(api = 30)
-    private void getAppExitInfo() {
-        ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        Log.d(TAG, "getAppExitInfo: " + Process.myPid());
-        List<ApplicationExitInfo> exitInfoList = am.getHistoricalProcessExitReasons(this.getPackageName(), 30553, 1);
-        if (exitInfoList != null && !exitInfoList.isEmpty()) {
-            for (ApplicationExitInfo info : exitInfoList) {
-                Log.d(TAG, "getAppExitInfo: " + info.getReason());
-                Log.d(TAG, "getAppExitInfo: " + info.getDescription());
-                Log.d(TAG, "getAppExitInfo: " + info.getProcessName());
-                Log.d(TAG, "getAppExitInfo: " + info.toString());
-            }
-        } else {
-            Log.d(TAG, "getAppExitInfo: is null");
-        }
-    }
-
-    /**
-     * 测试分区存储
-     */
-    @RequiresApi(api = Build.VERSION_CODES.P)
-    private void testScopeStorage() {
-
-        printPath(this.getFilesDir().getPath());
-        printPath(this.getCacheDir().getPath());
-        printPath(Environment.getExternalStorageDirectory().getPath());
-
-        printPath(this.getExternalCacheDir().getPath());
-        printPath(this.getExternalFilesDir("XXX").getPath());
-        for (File f : this.getExternalMediaDirs()) {
-            printPath(f.getAbsolutePath());
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            Log.i(TAG, "Scoped Storage: " + Environment.isExternalStorageLegacy());
-        }
-        File file = new File(this.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS), "test1.txt");
-        try {
-            Log.i(TAG, "create：" + file.createNewFile());
-        } catch (IOException e) {
-            Log.i(TAG, "create fail：" + e.getMessage());
-            e.printStackTrace();
-        }
-        saveGid("test" + System.currentTimeMillis());
-        initGuid();
-    }
-
-    private void saveGid(String id) {
-        BufferedWriter bw = null;
-        try {
-            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                String path = Environment.getExternalStorageDirectory().getPath() + "/Android/";
-                File file = new File(path, ".zest10010");
-                bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, false)));
-                bw.write(id);
-                bw.flush();
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-        } finally {
-            if (bw != null) {
-                try {
-                    bw.close();
-                } catch (IOException e1) {
-                    Log.e(TAG, e1.getMessage());
-                }
-            }
-        }
-    }
-
-    private void initGuid() {
-        String gidFromExternal = null;
-        try {
-            if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-                String path = Environment.getExternalStorageDirectory().getPath() + "/Android/";
-                File file = new File(path, ".zest10010");//  .unique
-                if (file.exists()) {
-                    BufferedReader br = null;
-                    try {
-                        br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-                        gidFromExternal = br.readLine();
-                        Log.d(TAG, "initGuid: " + gidFromExternal);
-                    } finally {
-                        if (br != null) {
-                            try {
-                                br.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void printPath(String s) {
-        Log.d(TAG, s);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -242,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void popWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);//获取一个填充器
-        View view = inflater.inflate(R.layout.spider_splash_privacy_net_tip, null);
+        View view = inflater.inflate(R.layout.dialog_net_tip, null);
         TextView textView1 = view.findViewById(R.id.privacy_disagree_button);
         TextView textView2 = view.findViewById(R.id.privacy_agree_button);
         final PopupWindow popWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
@@ -275,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         //第一个参数为父View对象，即PopupWindow所在的父控件对象，第二个参数为它的重心，后面两个分别为x轴和y轴的偏移量
-        popWindow.showAtLocation(inflater.inflate(R.layout.content_main2, null), Gravity.CENTER, 0, 0);
+        popWindow.showAtLocation(inflater.inflate(R.layout.ac_main, null), Gravity.CENTER, 0, 0);
 
     }
 
@@ -283,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog mNetTipDialog;
 
     private void showDialog() {
-        ScrollView sc = (ScrollView) getLayoutInflater().inflate(R.layout.spider_splash_dialog, null);
+        ScrollView sc = (ScrollView) getLayoutInflater().inflate(R.layout.dialog_privacy, null);
         TextView textView = sc.findViewById(R.id.dialog_privacy_content_tv);
 
         String textStart = getString(R.string.spider_splash_privacy_text_start);

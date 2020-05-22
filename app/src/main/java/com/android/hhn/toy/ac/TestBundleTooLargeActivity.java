@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Parcel;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -26,22 +25,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
 
-import androidx.navigation.ui.AppBarConfiguration;
+public class TestBundleTooLargeActivity extends AppCompatActivity {
 
-public class TestTooLargeActivity extends AppCompatActivity {
-
-    private static final String TAG = "TooLarge";
-    private int[] mProcessIds;
-    private AppBarConfiguration mAppBarConfiguration;
-    private TextView mTextView;
+    private static final String TAG = "BundleTooLarge";
+    private TextView mJumpTv;
     private TextView mClearTaskTv;
-    private int quitClickCount;
-    private Handler mHandler = new Handler();
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
@@ -49,18 +37,16 @@ public class TestTooLargeActivity extends AppCompatActivity {
         Log.d(TAG, "onSaveInstanceState: ");
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_toolarge);
-        mTextView = findViewById(R.id.main_tv);
-        mTextView.setText("TestTooLargeActivity");
-        mTextView.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.ac_bundle_too_large);
+        mJumpTv = findViewById(R.id.jump_page_tv);
+        mJumpTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TestTooLargeActivity.class);
+                Intent intent = new Intent(getApplicationContext(), TestBundleTooLargeActivity.class);
                 intent.putExtras(getBundle());
                 // Parcel data = Parcel.obtain();
                 // intent.writeToParcel(data, 0);
@@ -71,7 +57,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
                 if (!judge) {
                     startActivity(intent);
                 } else {
-                    Toast.makeText(TestTooLargeActivity.this, "TransactionTooLargeException", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TestBundleTooLargeActivity.this, "TransactionTooLargeException", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -91,7 +77,7 @@ public class TestTooLargeActivity extends AppCompatActivity {
         mClearTaskTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog mNetTipDialog = new AlertDialog.Builder(TestTooLargeActivity.this)
+                AlertDialog mNetTipDialog = new AlertDialog.Builder(TestBundleTooLargeActivity.this)
                         .setTitle("提示").setMessage("很抱歉，您打开的页面太多，无法打开新的页面，请点击“返回首页”后重新操作。")
                         .setPositiveButton("返回首页", new DialogInterface.OnClickListener() {
                             @Override

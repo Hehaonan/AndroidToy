@@ -4,12 +4,12 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/main_tv"
+        android:id="@+id/jump_page_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:padding="10dp"
-        android:text="TestTooLarge"
+        android:text="jump_page"
         android:textColor="@color/spider_black_212121_text_color"
         android:textSize="20dp" />
 
@@ -17,7 +17,7 @@
         android:id="@+id/clear_task_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/main_tv"
+        android:layout_below="@+id/jump_page_tv"
         android:layout_centerInParent="true"
         android:layout_marginTop="10dp"
         android:padding="10dp"
