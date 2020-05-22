@@ -79,9 +79,9 @@ public class DPPractice {
     //        if (level == arrays.size - 1) {
     //            return arrays[level][pos] //返回倒数第二层的数值 终止递归
     //        }
-    //        int left = recursion(level + 1, pos, arrays)
+    //        int left = recursion(level + 1, pos, arrays) // 层级+1
     //        int right = recursion(level + 1, pos + 1, arrays)
-    //        return Min(cur, next) + arrays[level][pos]// +最有一层的所有值
+    //        return Min(cur, next) + arrays[level][pos]// +最后一层的值
     //    }
 
     /**
