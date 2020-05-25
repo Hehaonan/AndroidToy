@@ -118,7 +118,7 @@ public class DPPractice {
         }
         int row = triangle.size(); // 原始行数
         int[][] dp = new int[row + 1][row + 1]; // 二维数组需要行、列+1，因为要处理i、j+1
-        // 优化：可以只需要维数组记录最值，二维数组方便推到DP公式
+        // 优化：可以只需要一维数组记录最值，二维数组方便推到DP公式
         for (int i = triangle.size() - 1; i >= 0; i--) {
             List<Integer> rows = triangle.get(i);
             for (int j = 0; j < rows.size(); j++) {

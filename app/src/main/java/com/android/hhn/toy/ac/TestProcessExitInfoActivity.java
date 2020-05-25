@@ -32,14 +32,15 @@ public class TestProcessExitInfoActivity extends AppCompatActivity {
         mCrashTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(), "Toast", Toast.LENGTH_SHORT).show();
-                //Log.d(TAG, "onClick: " + getStr().length());
+                Toast.makeText(getApplicationContext(), "create null exception", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "onClick: " + getStr().length());
             }
         });
         mANRTv = findViewById(R.id.anr_tv);
         mANRTv.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "create anr", Toast.LENGTH_SHORT).show();
                 createANR();
             }
         });
@@ -78,6 +79,7 @@ public class TestProcessExitInfoActivity extends AppCompatActivity {
     private void getAppExitInfo() {
         ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
         Log.d(TAG, "getAppExitInfo: " + Process.myPid());
+        // 0为所有
         List<ApplicationExitInfo> exitInfoList = am.getHistoricalProcessExitReasons(this.getPackageName(), 0, 10);
         if (exitInfoList != null && !exitInfoList.isEmpty()) {
             for (ApplicationExitInfo info : exitInfoList) {
