@@ -46,7 +46,7 @@ public class TestBundleTooLargeActivity extends AppCompatActivity {
         mJumpTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TestBundleTooLargeActivity.class);
+                Intent intent = new Intent(TestBundleTooLargeActivity.this, TestBundleTooLargeActivity.class);
                 intent.putExtras(getBundle());
                 // Parcel data = Parcel.obtain();
                 // intent.writeToParcel(data, 0);
@@ -55,7 +55,7 @@ public class TestBundleTooLargeActivity extends AppCompatActivity {
                 boolean judge = isBundleSizeTooLarge(" --- 传递前 ---> ", intent);
                 // Log.d(TAG, "传递前 :--------> " + intent.getExtras().toString());
                 if (!judge) {
-                    startActivity(intent);
+                    TestBundleTooLargeActivity.this.startActivity(intent);
                 } else {
                     Toast.makeText(TestBundleTooLargeActivity.this, "TransactionTooLargeException", Toast.LENGTH_SHORT).show();
                 }
@@ -169,19 +169,12 @@ public class TestBundleTooLargeActivity extends AppCompatActivity {
                 "process. Consequently this exception can be thrown when there are many transactions in progress even when most of the individual " +
                 "transactions are of moderate size.\n" +
                 "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
-
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.test_ic_launcher);
         bundle.putParcelable("bitmap", bitmap);
-
-        //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
+        //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.test_ic_launcher);
         //        bundle.putParcelable("bitmap2", bitmap2);
-
-        //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
-        //        bundle.putParcelable("bitmap2", bitmap2);
-        //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
-        //        bundle.putParcelable("bitmap3", bitmap2);
-        //        Bitmap bitmap3 = BitmapFactory.decodeResource(getResources(), R.mipmap.aa_spider_ic_launcher);
-        //        bundle.putParcelable("bitmap2", bitmap3);
+        //        Bitmap bitmap3 = BitmapFactory.decodeResource(getResources(), R.mipmap.test_ic_launcher);
+        //        bundle.putParcelable("bitmap3", bitmap3);
         return bundle;
     }
 
