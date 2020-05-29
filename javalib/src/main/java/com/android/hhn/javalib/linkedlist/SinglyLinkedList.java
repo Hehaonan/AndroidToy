@@ -265,7 +265,7 @@ public class SinglyLinkedList {
     private static LinkedNode mergedTwoLinked(LinkedNode l1, LinkedNode l2) {
         // 利用哨兵结点简化实现难度 构建一个新head
         LinkedNode newHead = new LinkedNode(0, null);
-        LinkedNode pos = newHead; // 代表指针 会移动到链表结尾
+        LinkedNode pos = newHead; // 位置指针 会移动到链表结尾
 
         while (l1 != null && l2 != null) {
             if (l1.value < l2.value) {

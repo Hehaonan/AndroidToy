@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorPrimary">#448aff</color>
+    <color name="colorPrimary_66">#66448aff</color>
+    <color name="colorPrimaryDark">#2072fb</color>
+    <color name="colorAccent">#448aff</color>
     <color name="spider_gray_line_color">#99d1d3d4</color>
     <color name="spider_white_color">#99d1d3d4</color>
     <color name="spider_eeeeee_white_color">#eeeeee</color>
