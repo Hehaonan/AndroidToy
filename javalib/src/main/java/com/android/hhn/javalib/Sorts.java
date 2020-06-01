@@ -145,6 +145,34 @@ public class Sorts {
 
     }
 
+    /**
+     * 二分查找
+     *
+     * @param arr    必须是有序数组
+     * @param target 目标值
+     *
+     * @return 目标值index
+     */
+    private static int binarySearch(int[] arr, int target) {
+        int left = 0;
+        int right = arr.length - 1;
+        int mid;
+        while (left <= right) {
+            // 中间索引 = (左侧  + 右侧) / 2
+            mid = (left + right) / 2;
+            if (arr[mid] > target) {
+                //如果中间元素大于要查找元素，则在中间元素的左侧去找正确元素，最右侧变为mid - 1
+                right = mid - 1;
+            } else if (arr[mid] < target) {
+                //如果中间元素小于要查找元素，则在中间元素的右侧去找正确元素，最左侧变为mid + 1
+                left = mid + 1;
+            } else {
+                return mid;
+            }
+        }
+        return -1;
+    }
+
     public static void main(String[] args) {
         int[] array = {2, 9, 1, 7, 4, 5, 3, 8, 6};
         //bubbleSort(array);
@@ -152,9 +180,10 @@ public class Sorts {
         //quickSort(array, 0, array.length - 1);
         // insertionSort(array);
         // shellSort(array);
-        array = mergeSort(array);
+        insertionSort(array);
         System.out.println("\n排序结果：");
         printArray(array);
+        System.out.println("二分查找 index：" + binarySearch(array, 8));
     }
 
     private static void insertionSort(int[] array) {
