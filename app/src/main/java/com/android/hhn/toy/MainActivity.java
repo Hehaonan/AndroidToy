@@ -33,6 +33,7 @@ import com.android.hhn.toy.ac.TestProcessExitInfoActivity;
 import com.android.hhn.toy.ac.TestScopeStorageActivity;
 import com.android.hhn.toy.jobscheduler.MyJobService;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -76,7 +77,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         getPidByProcessName(getApplicationContext());
+
+        testHashMap();
     }
+
+    private void testHashMap() {
+        HashMap<String, String> map = new HashMap<>(10);
+        String s = new String("key");
+        String s2 = new String("key2");
+        map.put(s, "111");
+        map.put(s2, "222");
+        String s3 = new String("key3");
+        map.put(s3, "333");
+        Log.d(TAG, "HashMap size ：" + map.size());
+        for (String key : map.keySet()) {
+            Log.d(TAG, "map-----> " + key + " : " + map.get(key));
+        }
+        Log.d(TAG, "onCreate: " + s.hashCode());
+        Log.d(TAG, "onCreate: " + s2.hashCode());
+        Log.d(TAG, "onCreate: " + s3.hashCode());
+        Log.d(TAG, "onCreate: " + "key".hashCode());
+        Log.d(TAG, "onCreate: " + (s.hashCode() & 15));
+        Log.d(TAG, "onCreate: " + (s2.hashCode() & 15));
+        Log.d(TAG, "onCreate: " + (s3.hashCode() & 15));
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -96,15 +121,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void quitApp() {
-//        if (null != mProcessIds && mProcessIds.length > 0) {
-//            Log.d(TAG, "quitApp length: " + mProcessIds.length);
-//            for (int pid : mProcessIds) {
-//                Log.d(TAG, "quitApp: kill " + pid);
-//                Process.killProcess(mProcessIds[0]);
-//            }
-//        } else {
-//            Process.killProcess(Process.myPid());
-//        }
+        //        if (null != mProcessIds && mProcessIds.length > 0) {
+        //            Log.d(TAG, "quitApp length: " + mProcessIds.length);
+        //            for (int pid : mProcessIds) {
+        //                Log.d(TAG, "quitApp: kill " + pid);
+        //                Process.killProcess(mProcessIds[0]);
+        //            }
+        //        } else {
+        //            Process.killProcess(Process.myPid());
+        //        }
         System.exit(0);
     }
 
