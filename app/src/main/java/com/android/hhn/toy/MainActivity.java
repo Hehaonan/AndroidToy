@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +35,9 @@ import com.android.hhn.toy.ac.TestProcessExitInfoActivity;
 import com.android.hhn.toy.ac.TestScopeStorageActivity;
 import com.android.hhn.toy.jobscheduler.MyJobService;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 
@@ -79,6 +84,29 @@ public class MainActivity extends AppCompatActivity {
         getPidByProcessName(getApplicationContext());
 
         testHashMap();
+    }
+
+    private Bitmap createBitmap(File file) {
+        // 压缩文件
+        Bitmap sourceBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        sourceBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+        BitmapFactory.decodeStream(bais);
+
+        Bitmap sourceBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.ic_launcher_background_d);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        // 如果设置为true，则解码器将返回null（无位图），
+        // 仍可以设置，从而允许调用方查询位图而不必为其像素分配内存。
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(file.getAbsolutePath(), options);
+        options.inPreferredConfig = Bitmap.Config.RGB_565;// 设置更低颜色模式
+        options.inSampleSize = 2;//设置更低采样率，宽、高为原始1/2，size缩减为1/4
+        options.inJustDecodeBounds = false;
+        options.inDensity = 3;// bitmap的自身密度
+        options.inTargetDensity = 2;// 目标设备的密度
+        options.inScaled = false;// 缩放系数=inDensity/inTargetDensity
+        return sourceBitmap2;
     }
 
     private void testHashMap() {
