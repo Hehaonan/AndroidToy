@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
@@ -24,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class TestBundleTooLargeActivity extends AppCompatActivity {
 
@@ -103,20 +105,27 @@ public class TestBundleTooLargeActivity extends AppCompatActivity {
             DecimalFormat df = new DecimalFormat("0.00");
             long start = System.nanoTime();
             Bundle bundle = intent.getExtras();
-            Parcel data = Parcel.obtain();
-            bundle.writeToParcel(data, 0);
-            int dataSize = data.dataSize();
+            int dataSize = getBundleSize(bundle);
             Log.d(TAG, pos + ": bundle 原始 size ：" + dataSize);
 
             // Android O API=26 以上才有这个方法 需要处理
             long temp = System.nanoTime();
             Bundle copyBundle = bundle.deepCopy();
             Log.d(TAG, pos + ": deepCopy耗时 >>>>>>>>>>>：" + df.format(((System.nanoTime() - temp)) / 1000000D) + " 毫秒 ");
-            Parcel deepData = Parcel.obtain();
-            copyBundle.writeToParcel(deepData, 0);
-            int realSize = deepData.dataSize();
+            int realSize = getBundleSize(copyBundle);
             Log.d(TAG, pos + ": writeToParcel耗时 >>>>>>>>>>>：" + df.format(((System.nanoTime() - temp)) / 1000000D) + " 毫秒 ");
             Log.d(TAG, pos + ": bundle deepCopy size ：" + realSize);
+
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.append("[");
+            for (Object key : copyBundle.keySet().toArray()) {
+                copyBundle.remove(key.toString());
+                int newBundleSize = getBundleSize(copyBundle);
+                strBuilder.append(key).append(":").append(realSize - newBundleSize).append(",");
+                realSize = newBundleSize;
+            }
+            strBuilder.append("]");
+            Log.d(TAG, pos + "bundle get each key size : " + strBuilder);
 
             if (realSize > 512 * 1024) {// 大于512k
                 return true;
@@ -148,20 +157,23 @@ public class TestBundleTooLargeActivity extends AppCompatActivity {
             try {
                 Method m = bundle.getClass().getMethod("getSize");
                 Log.d(TAG, pos + ": bundle 原始 size，反射法：" + m.invoke(bundle, null));
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
         return false;
     }
 
+    private int getBundleSize(Bundle bundle) {
+        Parcel deepData = Parcel.obtain();
+        bundle.writeToParcel(deepData, 0);
+        // bundle数据大耗时会长 需要异步处理
+        return deepData.dataSize();// 单位是byte
+    }
+
     private Bundle getBundle() {
         Bundle bundle = new Bundle();
-        bundle.putString("bundle", "The Binder transaction failed because it was too large.\n" +
+        bundle.putString("key_String", "The Binder transaction failed because it was too large.\n" +
                 "During a remote procedure call, the arguments and the return value of the call are transferred as Parcel objects stored in the " +
                 "Binder transaction buffer. If the arguments or the return value are too large to fit in the transaction buffer, then the call will" +
                 " fail and TransactionTooLargeException will be thrown.\n" +
@@ -170,14 +182,61 @@ public class TestBundleTooLargeActivity extends AppCompatActivity {
                 "transactions are of moderate size.\n" +
                 "// 一般进程中有 1MB Binder transaction buffer 共享传递的数据，大小超过这个buffer，则会抛出该异常。The Binder transaction failed because it was too large.");
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.test_ic_launcher);
-        bundle.putParcelable("bitmap", bitmap);
-        //        Bitmap bitmap2 = BitmapFactory.decodeResource(getResources(), R.mipmap.test_ic_launcher);
-        //        bundle.putParcelable("bitmap2", bitmap2);
-        //        Bitmap bitmap3 = BitmapFactory.decodeResource(getResources(), R.mipmap.test_ic_launcher);
-        //        bundle.putParcelable("bitmap3", bitmap3);
+        //bundle.putParcelable("key_bitmap1", bitmap);
+        bundle.putParcelable("key_Class", new Person("Person1", 34, false));
+        ArrayList<Person> list = new ArrayList<>();
+        list.add(new Person("Person1", 34, false));
+        list.add(new Person("Person2", 3, false));
+        list.add(new Person("Person4", 4, false));
+        list.add(new Person("Person3", 41, false));
+        list.add(new Person("Person5", 21, false));
+        bundle.putParcelableArrayList("key_List", list);
+        bundle.putParcelable("key_bitmap1", bitmap);
         return bundle;
     }
 
+    private static class Person implements Parcelable {
+        String name;
+        int age;
+        Boolean isAlive;
+
+        public Person(String name, int age, Boolean isAlive) {
+            this.name = name;
+            this.age = age;
+            this.isAlive = isAlive;
+        }
+
+        protected Person(Parcel in) {
+            name = in.readString();
+            age = in.readInt();
+            byte tmpIsAlive = in.readByte();
+            isAlive = tmpIsAlive == 0 ? null : tmpIsAlive == 1;
+        }
+
+        public static final Creator<Person> CREATOR = new Creator<Person>() {
+            @Override
+            public Person createFromParcel(Parcel in) {
+                return new Person(in);
+            }
+
+            @Override
+            public Person[] newArray(int size) {
+                return new Person[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeString(name);
+            dest.writeInt(age);
+            dest.writeByte((byte) (isAlive == null ? 0 : isAlive ? 1 : 2));
+        }
+    }
 
     public String bitmapToString(Bitmap bitmap) {
         //将Bitmap转换成字符串
