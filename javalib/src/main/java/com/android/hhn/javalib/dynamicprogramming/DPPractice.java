@@ -92,16 +92,25 @@ public class DPPractice {
      * @return
      */
     private static int findMinPathRec(List<List<Integer>> triangle) {
-        return recursion(0, 0, triangle);
+        return recursion(0, 0, triangle, "", 0);
     }
 
-    private static int recursion(int level, int c, List<List<Integer>> triangle) {
+    private static int recursion(int level, int position, List<List<Integer>> triangle, String path, int sum) {
+        int item = triangle.get(level).get(position);
+        // 终止条件
         if (level == triangle.size() - 1) {
-            return triangle.get(level).get(c);
+            path += item;
+            System.out.println("each path : " + path + " with sum : " + sum);
+            return triangle.get(level).get(position);
         }
-        int left = recursion(level + 1, c, triangle);
-        int right = recursion(level + 1, c + 1, triangle);
-        return Math.min(left, right) + triangle.get(level).get(c);
+        // 每次递归 核心逻辑
+        path += item + " -> ";
+        sum += item;
+        // 递归扩散
+        int left = recursion(level + 1, position, triangle, path, sum);
+        int right = recursion(level + 1, position + 1, triangle, path, sum);
+        // 结束 处理返回
+        return Math.min(left, right) + triangle.get(level).get(position);
     }
 
     /**
@@ -154,7 +163,7 @@ public class DPPractice {
         triangle.add(list2);
         triangle.add(list3);
         triangle.add(list4);
-        System.out.println(findMinPathRec(triangle));
-        System.out.println(findMinPathDP(triangle));
+        System.out.println("min recursion : " + findMinPathRec(triangle));
+        System.out.println("min DP : " + findMinPathDP(triangle));
     }
 }

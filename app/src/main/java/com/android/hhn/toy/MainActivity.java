@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
         });
         getPidByProcessName(getApplicationContext());
 
-        testHashMap();
     }
 
     private Bitmap createBitmap(File file) {
@@ -130,6 +129,23 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: " + (s3.hashCode() & 15));
     }
 
+    private void testHandler() {
+        Handler handler = new Handler();
+        Log.d(TAG, "handler = 1");
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "handler = 2");
+            }
+        });
+        Log.d(TAG, "handler = 3");
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "handler = 4");
+            }
+        }, 100);
+    }
 
     @Override
     public void onBackPressed() {
