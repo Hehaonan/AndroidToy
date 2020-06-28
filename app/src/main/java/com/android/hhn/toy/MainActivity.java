@@ -273,24 +273,24 @@ public class MainActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                AlertDialog mNetTipDialog = new AlertDialog.Builder(MainActivity.this)
+                Log.d(TAG, "isAttachedToWindow: " + mNetTipDialog.getWindow().getDecorView().isAttachedToWindow());
+                AlertDialog testDialog = new AlertDialog.Builder(MainActivity.this)
                         .setTitle("提示").setMessage("测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊-测试文案啊！！！")
-                        //                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                        //                            @Override
-                        //                            public void onClick(DialogInterface dialog, int which) {
-                        //                                dialog.dismiss();
-                        //                            }
-                        //                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
                             }
                         }).create();
-                mNetTipDialog.setCancelable(true);
-                mNetTipDialog.setCanceledOnTouchOutside(true);
-                mNetTipDialog.show();
+                testDialog.setCancelable(true);
+                testDialog.setCanceledOnTouchOutside(true);
+                testDialog.show();
             }
         });
         mNetTipDialog = new AlertDialog.Builder(this)
@@ -308,6 +308,13 @@ public class MainActivity extends AppCompatActivity {
                         mNetTipDialog = null;
                     }
                 }).create();
+
+        if (isFinishing() || isDestroyed()) {
+            Log.d(TAG, "isAttachedToWindow: " + mNetTipDialog.getWindow().getDecorView().isAttachedToWindow());
+            Log.d(TAG, "isFinishing: " + this.isFinishing());
+            Log.d(TAG, "isDestroyed: " + this.isDestroyed());
+            return;
+        }
         mNetTipDialog.setCancelable(false);
         mNetTipDialog.setCanceledOnTouchOutside(false);
         mNetTipDialog.show();

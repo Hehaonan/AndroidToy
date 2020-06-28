@@ -71,24 +71,24 @@ public class TestProcessExitInfoActivity extends AppCompatActivity {
      */
     @RequiresApi(api = 30)
     private void getAppExitInfo() {
-//        Log.d(TAG, "getAppExitInfo: " + Build.VERSION.SDK_INT);
-//        Log.d(TAG, "getAppExitInfo: " + android.os.Build.BRAND);
-//        Log.d(TAG, "getAppExitInfo: " + android.os.Build.VERSION.RELEASE);
-//        if (android.os.Build.VERSION.RELEASE.equals("R")) {
-//            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-//            Log.d(TAG, "getAppExitInfo myPid: " + android.os.Process.myPid());
-//            // 0为所有进程信息
-//            List<ApplicationExitInfo> exitInfoList = am.getHistoricalProcessExitReasons(this.getPackageName(), 0, 10);
-//            if (exitInfoList != null && !exitInfoList.isEmpty()) {
-//                for (ApplicationExitInfo info : exitInfoList) {
-//                    Log.d(TAG, "getAppExitInfo: " + info.toString());
-//                }
-//            } else {
-//                Log.d(TAG, "getAppExitInfo: is null");
-//            }
-//        } else {
-//            Log.d(TAG, "android version too low");
-//        }
+        //        Log.d(TAG, "getAppExitInfo: " + Build.VERSION.SDK_INT);
+        //        Log.d(TAG, "getAppExitInfo: " + android.os.Build.BRAND);
+        //        Log.d(TAG, "getAppExitInfo: " + android.os.Build.VERSION.RELEASE);
+        //        if (android.os.Build.VERSION.RELEASE.equals("R")) {
+        //            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        //            Log.d(TAG, "getAppExitInfo myPid: " + android.os.Process.myPid());
+        //            // 0为所有进程信息
+        //            List<ApplicationExitInfo> exitInfoList = am.getHistoricalProcessExitReasons(this.getPackageName(), 0, 10);
+        //            if (exitInfoList != null && !exitInfoList.isEmpty()) {
+        //                for (ApplicationExitInfo info : exitInfoList) {
+        //                    Log.d(TAG, "getAppExitInfo: " + info.toString());
+        //                }
+        //            } else {
+        //                Log.d(TAG, "getAppExitInfo: is null");
+        //            }
+        //        } else {
+        //            Log.d(TAG, "android version too low");
+        //        }
     }
 }
 
