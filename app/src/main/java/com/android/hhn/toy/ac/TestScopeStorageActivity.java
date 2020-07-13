@@ -1,7 +1,9 @@
 package com.android.hhn.toy.ac;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -85,16 +87,42 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         Log.d(TAG, "##### " + MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL));
 
         //createFile();
-        readFile();
+        Uri fileUri = queryFile();
+        if (null == fileUri) {
+            createFile();
+        }
+        readFile(fileUri);
+    }
+
+    // 文件名称
+    private static final String FILE_NAME = "myTest.txt";
+    // 文件创建路径
+    private static final String FILE_PATH = Environment.DIRECTORY_DOCUMENTS + File.separator + "Test";
+
+    private Uri queryFile() {
+        Uri external = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        Log.d(TAG, "queryFile: 文件根目录: " + external);
+        ContentResolver resolver = this.getContentResolver();
+        String selection = MediaStore.MediaColumns.DISPLAY_NAME + "=?";
+        String[] selectionArgs = new String[]{FILE_NAME};
+        String[] projection = new String[]{MediaStore.MediaColumns._ID};
+        Cursor cursor = resolver.query(external, projection, selection, selectionArgs, null);
+        Uri fileUri = null;
+        if (cursor != null && cursor.moveToFirst()) {
+            fileUri = ContentUris.withAppendedId(external, cursor.getLong(0));
+            cursor.close();
+        }
+        Log.d(TAG, "queryFile: 目标文件uri: " + fileUri);
+        return fileUri;
     }
 
     private void createFile() {
         // 构建文件
         ContentValues values = new ContentValues();
-        values.put(MediaStore.MediaColumns.DISPLAY_NAME, "myTest.txt");
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, FILE_NAME);
         values.put(MediaStore.MediaColumns.MIME_TYPE, "text/plain");
         // 可以指定具体路径，不指定默认使用Download文件夹
-        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, FILE_PATH);
 
         // 指定根目录Uri
         Uri external = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
@@ -103,7 +131,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         // 合成目标地址的Uri
         Uri insertUri = resolver.insert(external, values);
         // 此uri可以用于操作文件
-        Log.d(TAG, "createFile: " + insertUri);
+        Log.d(TAG, "createFile: 目标地址的Uri: " + insertUri);
 
         OutputStream os = null;
         try {
@@ -126,15 +154,20 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         }
     }
 
-    private void readFile() {
+    private void readFile(Uri uri) {
+        if (null == uri) {
+            Log.d(TAG, "readFile: uri is null");
+            return;
+        }
         InputStream inputStream = null;
         BufferedReader br = null;
-        Uri uri = Uri.parse("content://media/external/file/726258");
+        // 可以直接使用 insert 时生成的uri，但是需要保存
+        //Uri uri = Uri.parse("content://media/external/file/726258");
         try {
             inputStream = this.getContentResolver().openInputStream(uri);
             if (inputStream != null) {
                 br = new BufferedReader(new InputStreamReader(inputStream));
-                Log.d(TAG, "readFile:" + br.readLine());
+                Log.d(TAG, "readFile: 文件内容: " + br.readLine());
             }
         } catch (IOException e) {
             Log.d(TAG, "readFile fail: " + e.getCause());
