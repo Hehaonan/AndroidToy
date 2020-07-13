@@ -1,8 +1,12 @@
 package com.android.hhn.toy.ac;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -16,7 +20,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 
 public class TestScopeStorageActivity extends AppCompatActivity {
@@ -37,7 +43,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
     /**
      * 测试分区存储
      */
-    @RequiresApi(api = Build.VERSION_CODES.P)
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void testScopeStorage() {
 
         printPath(this.getFilesDir().getPath());
@@ -60,8 +66,92 @@ public class TestScopeStorageActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         saveGid("test" + System.currentTimeMillis());
-        initGuid();
+        getGuid();
+
+        // 可以指定的外部存储卷名
+        for (String volumeName : MediaStore.getExternalVolumeNames(this)) {
+            Log.d(TAG, ">>>>> " + volumeName);
+            Log.d(TAG, ">>>>> " + MediaStore.Images.Media.getContentUri(volumeName));
+            Log.d(TAG, ">>>>> " + MediaStore.Video.Media.getContentUri(volumeName));
+            Log.d(TAG, ">>>>> " + MediaStore.Audio.Media.getContentUri(volumeName));
+            Log.d(TAG, ">>>>> " + MediaStore.Downloads.getContentUri(volumeName));
+            Log.d(TAG, ">>>>> " + MediaStore.Files.getContentUri(volumeName));
+        }
+        // 默认的外部存储卷名
+        Log.d(TAG, "##### " + MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Log.d(TAG, "##### " + MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        Log.d(TAG, "##### " + MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        Log.d(TAG, "##### " + MediaStore.Downloads.EXTERNAL_CONTENT_URI);
+        Log.d(TAG, "##### " + MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL));
+
+        //createFile();
+        readFile();
     }
+
+    private void createFile() {
+        // 构建文件
+        ContentValues values = new ContentValues();
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, "myTest.txt");
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "text/plain");
+        // 可以指定具体路径，不指定默认使用Download文件夹
+        values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOCUMENTS);
+
+        // 指定根目录Uri
+        Uri external = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        ContentResolver resolver = this.getContentResolver();
+
+        // 合成目标地址的Uri
+        Uri insertUri = resolver.insert(external, values);
+        // 此uri可以用于操作文件
+        Log.d(TAG, "createFile: " + insertUri);
+
+        OutputStream os = null;
+        try {
+            if (insertUri != null) {
+                os = resolver.openOutputStream(insertUri);
+                if (os != null) {
+                    os.write("test_id:123456".getBytes());
+                }
+            }
+        } catch (IOException e) {
+            Log.d(TAG, "createFile fail: " + e.getCause());
+        } finally {
+            try {
+                if (os != null) {
+                    os.close();
+                }
+            } catch (IOException e) {
+                Log.d(TAG, "createFile fail in close: " + e.getCause());
+            }
+        }
+    }
+
+    private void readFile() {
+        InputStream inputStream = null;
+        BufferedReader br = null;
+        Uri uri = Uri.parse("content://media/external/file/726258");
+        try {
+            inputStream = this.getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                br = new BufferedReader(new InputStreamReader(inputStream));
+                Log.d(TAG, "readFile:" + br.readLine());
+            }
+        } catch (IOException e) {
+            Log.d(TAG, "readFile fail: " + e.getCause());
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                Log.d(TAG, "readFile fail in close: " + e.getCause());
+            }
+        }
+    }
+
 
     private void saveGid(String id) {
         BufferedWriter bw = null;
@@ -74,7 +164,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
                 bw.flush();
             }
         } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
+            Log.e(TAG, "save gid fail :" + e.getMessage());
         } finally {
             if (bw != null) {
                 try {
@@ -86,7 +176,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         }
     }
 
-    private void initGuid() {
+    private void getGuid() {
         String gidFromExternal = null;
         try {
             if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
