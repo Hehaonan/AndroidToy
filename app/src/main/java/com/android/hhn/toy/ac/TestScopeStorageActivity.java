@@ -47,13 +47,14 @@ public class TestScopeStorageActivity extends AppCompatActivity {
      */
     @RequiresApi(api = Build.VERSION_CODES.Q)
     private void testScopeStorage() {
-
+        // 获取私有目录路径
         printPath(this.getFilesDir().getPath());
         printPath(this.getCacheDir().getPath());
         printPath(Environment.getExternalStorageDirectory().getPath());
-
         printPath(this.getExternalCacheDir().getPath());
+        // 私有目录创建路径
         printPath(this.getExternalFilesDir("XXX").getPath());
+
         for (File f : this.getExternalMediaDirs()) {
             printPath(f.getAbsolutePath());
         }
@@ -97,14 +98,19 @@ public class TestScopeStorageActivity extends AppCompatActivity {
     // 文件名称
     private static final String FILE_NAME = "myTest.txt";
     // 文件创建路径
-    private static final String FILE_PATH = Environment.DIRECTORY_DOCUMENTS + File.separator + "Test";
+    private static final String FILE_PATH = Environment.DIRECTORY_DOCUMENTS + File.separator + "Qunar";
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private Uri queryFile() {
+        // 只需要查询根目录的Uri即可
         Uri external = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
         Log.d(TAG, "queryFile: 文件根目录: " + external);
         ContentResolver resolver = this.getContentResolver();
+        // 查询条件
         String selection = MediaStore.MediaColumns.DISPLAY_NAME + "=?";
+        // 查询参数
         String[] selectionArgs = new String[]{FILE_NAME};
+        // 查询的目标
         String[] projection = new String[]{MediaStore.MediaColumns._ID};
         Cursor cursor = resolver.query(external, projection, selection, selectionArgs, null);
         Uri fileUri = null;
@@ -162,7 +168,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         InputStream inputStream = null;
         BufferedReader br = null;
         // 可以直接使用 insert 时生成的uri，但是需要保存
-        //Uri uri = Uri.parse("content://media/external/file/726258");
+        // uri = Uri.parse("content://media/external/file/726258");
         try {
             inputStream = this.getContentResolver().openInputStream(uri);
             if (inputStream != null) {
@@ -185,6 +191,15 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         }
     }
 
+    private void deleteFile(Uri uri) {
+        if (null == uri) {
+            Log.d(TAG, "deleteFile: uri is null");
+            return;
+        }
+        ContentResolver resolver = this.getContentResolver();
+        int row = resolver.delete(uri, null, null);
+        Log.d(TAG, "deleteFile: " + row);
+    }
 
     private void saveGid(String id) {
         BufferedWriter bw = null;
@@ -220,7 +235,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
                     try {
                         br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
                         gidFromExternal = br.readLine();
-                        Log.d(TAG, "initGuid: " + gidFromExternal);
+                        Log.d(TAG, "get gid: " + gidFromExternal);
                     } finally {
                         if (br != null) {
                             try {
@@ -234,6 +249,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e(TAG, "get gid fail :" + e.getMessage());
         }
     }
 
