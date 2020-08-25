@@ -25,6 +25,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -197,6 +198,30 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "JobScheduler 执行失败", Toast.LENGTH_SHORT).show();
         }
     }
+
+    private AlertDialog mSimLockedTipsDialog;
+
+    private void hideSimLockedTipsDialog() {
+        if (mSimLockedTipsDialog != null) {
+            mSimLockedTipsDialog.dismiss();
+            mSimLockedTipsDialog = null;
+        }
+    }
+
+    private void showSimLockedTipsDialog() {
+        if (mSimLockedTipsDialog != null) {
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
+        builder.setTitle(getString(R.string.nav_header_title));
+        builder.setMessage(getString(R.string.spider_splash_privacy_text));
+        builder.setCancelable(false);
+        mSimLockedTipsDialog = builder.create();
+        mSimLockedTipsDialog.setCanceledOnTouchOutside(false);
+        mSimLockedTipsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        mSimLockedTipsDialog.show();
+    }
+
 
     private void popWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);//获取一个填充器
