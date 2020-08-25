@@ -50,7 +50,7 @@ public class TestScopeStorageActivity extends AppCompatActivity {
         // 获取私有目录路径
         printPath(this.getFilesDir().getPath());
         printPath(this.getCacheDir().getPath());
-        printPath(Environment.getExternalStorageDirectory().getPath());
+        printPath(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath());
         printPath(this.getExternalCacheDir().getPath());
         // 私有目录创建路径
         printPath(this.getExternalFilesDir("XXX").getPath());
