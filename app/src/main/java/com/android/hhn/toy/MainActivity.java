@@ -58,7 +58,8 @@ public class MainActivity extends AppCompatActivity {
         mTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
+                //showDialog();
+                showSimLockedTipsDialog();
             }
         });
         findViewById(R.id.bundle_too_large_tv).setOnClickListener(new View.OnClickListener() {
@@ -212,16 +213,39 @@ public class MainActivity extends AppCompatActivity {
         if (mSimLockedTipsDialog != null) {
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(getApplicationContext());
-        builder.setTitle(getString(R.string.nav_header_title));
-        builder.setMessage(getString(R.string.spider_splash_privacy_text));
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.sim_state_locked_dialog_title));
+        builder.setMessage(getString(R.string.sim_state_locked_puk_dialog_message));
         builder.setCancelable(false);
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                hideSimLockedTipsDialog();
+            }
+        });
         mSimLockedTipsDialog = builder.create();
         mSimLockedTipsDialog.setCanceledOnTouchOutside(false);
-        mSimLockedTipsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
+        mSimLockedTipsDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION);
+        setDialogDecorViewFlag();
+        mSimLockedTipsDialog.getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility) {
+                if (visibility == View.SYSTEM_UI_FLAG_VISIBLE) { //当导航栏恢复显示，再重置一下diaolog的设置
+                    setDialogDecorViewFlag();
+                }
+            }
+        });
         mSimLockedTipsDialog.show();
     }
 
+    private void setDialogDecorViewFlag() {
+        int uiOptions = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        mSimLockedTipsDialog.getWindow().getDecorView().setSystemUiVisibility(uiOptions);
+    }
 
     private void popWindow() {
         LayoutInflater inflater = LayoutInflater.from(this);//获取一个填充器
