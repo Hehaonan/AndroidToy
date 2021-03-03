@@ -1,4 +1,4 @@
-package com.android.hhn.javalib;
+package com.android.hhn.javalib.synchornized;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -7,7 +7,7 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Author: haonan.he ;<p/>
  * Date: 2020/5/14,8:04 PM ;<p/>
- * Description: ;<p/>
+ * Description: 死锁实现 和 ReentrantLock实现双线程交替打印1、2;<p/>
  * Other: ;
  */
 public class TestSync {

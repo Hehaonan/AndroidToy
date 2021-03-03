@@ -1,4 +1,4 @@
-package com.android.hhn.javalib;
+package com.android.hhn.javalib.other;
 
 /**
  * Author: haonan.he ;<p/>

@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation 'org.openjdk.jol:jol-core:0.14'
 }
 
 sourceCompatibility = "8"
