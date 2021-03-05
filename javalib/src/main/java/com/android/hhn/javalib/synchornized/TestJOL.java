@@ -9,16 +9,33 @@ import org.openjdk.jol.info.ClassLayout;
  * Other:
  * JOL:https://github.com/openjdk/jol
  * JOL Sample:https://hg.openjdk.java.net/code-tools/jol/file/tip/jol-samples/src/main/java/org/openjdk/jol/samples/
+ * 关于monitor enter/exit的解释：https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-6.html#jvms-6.5.monitorenter
  * ;
  */
 class TestJOL {
+
+    // 查看命令：javap -verbose javalib.build.classes.java.main.com.android.hhn.javalib.synchornized.TestJOL
+    //  public static synchronized void test1();
+    //    descriptor: ()V
+    //    flags: ACC_PUBLIC, ACC_STATIC, ACC_SYNCHRONIZED
+    //    Code:
+    //      stack=0, locals=0, args_size=0
+    //         0: return
+    //      LineNumberTable:
+    //        line 18: 0
+    // 增加ACC_SYNCHRONIZED标志，执行线程需要持有Monitor才能运行方法
+    // 与同步代码块类似，判断monitor count是否为0 才可进入
+    public synchronized void test1() {
+        System.out.println("");
+    }
+
     public static void main(String[] args) {
         Object o = new Object();
         System.out.println(ClassLayout.parseInstance(o).toPrintable());
 
-        synchronized (o) {
+        synchronized (o) { // 汇编指令 monitorenter
             System.out.println(ClassLayout.parseInstance(o).toPrintable());
-        }
+        } // monitorexit
     }
     // 未上锁对象：
     // java.lang.Object object internals:
