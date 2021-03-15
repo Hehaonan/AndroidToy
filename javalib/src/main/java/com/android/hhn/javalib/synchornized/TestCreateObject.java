@@ -14,6 +14,24 @@ class TestCreateObject {
     //7 astore_1 // 将栈中t指向堆内存中的T对象，建立关联
     //8 return
     public static void main(String[] args) {
-        T t = new T();
+        //T t = new T();
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                test();
+            }
+        });
+        thread.start();// out: main test 异步
+        // thread.run();// out: test main 同步
+        System.out.println("main");
+    }
+
+    public static void test() {
+        System.out.println("test");
     }
 }
