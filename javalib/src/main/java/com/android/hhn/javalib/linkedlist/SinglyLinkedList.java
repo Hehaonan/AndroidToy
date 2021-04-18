@@ -8,29 +8,8 @@ package com.android.hhn.javalib.linkedlist;
  */
 public class SinglyLinkedList {
 
-    public static class LinkedNode {
-        public String data;
-        public int value;
-        public LinkedNode next;
-
-        public LinkedNode(String data, LinkedNode next) {
-            this.data = data;
-            this.next = next;
-            this.value = data.isEmpty() ? 0 : data.charAt(0);
-        }
-
-        public LinkedNode(int value, LinkedNode next) {
-            this.value = value;
-            this.next = next;
-        }
-    }
-
     private static LinkedNode getNewNode(int value, LinkedNode node) {
-        return new LinkedNode(value, node);
-    }
-
-    private static LinkedNode getNewNode(String data, LinkedNode node) {
-        return new LinkedNode(data, node);
+        return LinkedListUtil.getNewNode(value, node);
     }
 
     /**
@@ -39,16 +18,7 @@ public class SinglyLinkedList {
      * @param head
      */
     private static void printLinkedList(LinkedNode head) {
-        if (head == null) {
-            System.out.println("链表为空");
-            return;
-        }
-        while (head != null) {
-
-            System.out.print((head.data != null ? head.data : "") + "(" + head.value + ")" + "->");
-            head = head.next;
-        }
-        System.out.println();
+        LinkedListUtil.printLinkedList(head);
     }
 
     /**
