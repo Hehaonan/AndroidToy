@@ -225,6 +225,41 @@ public class SinglyLinkedList {
     }
 
     /**
+     * 如果有环，得到环的长度
+     *
+     * @return
+     */
+    private static int getCycleLength(LinkedNode head) {
+        if (head == null)
+            return 0;
+        LinkedNode fast = head.next; //fast在slow前一个
+        LinkedNode slow = head;
+        while (fast != null && fast.next != null) { // 无环到尾结点就停止
+            fast = fast.next.next;// fast每次前进两个
+            slow = slow.next;// slow每次前进一个
+            if (slow == fast) {// 节点相同代表有环，进入环中获取长度
+                slow = slow.next;// slow 先向后走一位
+                int len = 1;// 换的长度加1
+                while (fast != slow) {// 两个指针再次相等代表走了一圈
+                    len++;
+                    slow = slow.next;
+                }
+                return len;// len代表环中的长度
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * 如果有环，得到环的入口节点
+     *
+     * @return
+     */
+    private static LinkedNode getCycleEntranceNode() {
+        return null;
+    }
+
+    /**
      * 合并两个有序链表
      *
      * @param l1
@@ -370,9 +405,6 @@ public class SinglyLinkedList {
 
         //        printLinkedList(reverseLinkedList(head));
 
-        //        h.next = head;
-        //        System.out.println("是否有环：" + checkHasCircle(head));
-
         //        LinkedNode E = new LinkedNode("E", null);
         //        LinkedNode C = new LinkedNode("C", E);
         //        LinkedNode A = new LinkedNode("A", C);
@@ -386,9 +418,14 @@ public class SinglyLinkedList {
 
         // printNode(findMidInLinkedList(head));
 
-        LinkedNode test = new LinkedNode(1, getNewNode(1, getNewNode(2, getNewNode(2, getNewNode(3, null)))));
-        printLinkedList(test);
-        printLinkedList(removeDuplicateNode(test));
+        //        LinkedNode test = new LinkedNode(1, getNewNode(1, getNewNode(2, getNewNode(2, getNewNode(3, null)))));
+        //        printLinkedList(test);
+        //        printLinkedList(removeDuplicateNode(test));
+
+        h.next = c;
+        System.out.println("是否有环：" + checkHasCircle(head));
+        System.out.println("环的长度：" + getCycleLength(head));
+
 
     }
 
