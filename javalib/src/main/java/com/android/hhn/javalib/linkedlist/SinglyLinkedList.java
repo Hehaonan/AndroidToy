@@ -213,7 +213,7 @@ public class SinglyLinkedList {
     private static boolean checkHasCircle(LinkedNode head) {
         if (head == null)
             return false;
-        LinkedNode fast = head.next; //fast在slow前一个
+        LinkedNode fast = head;
         LinkedNode slow = head;
         while (fast != null && fast.next != null) { // 无环到尾结点就停止
             fast = fast.next.next;// fast每次前进两个
@@ -232,7 +232,7 @@ public class SinglyLinkedList {
     private static int getCycleLength(LinkedNode head) {
         if (head == null)
             return 0;
-        LinkedNode fast = head.next; //fast在slow前一个
+        LinkedNode fast = head;
         LinkedNode slow = head;
         while (fast != null && fast.next != null) { // 无环到尾结点就停止
             fast = fast.next.next;// fast每次前进两个
@@ -252,10 +252,35 @@ public class SinglyLinkedList {
 
     /**
      * 如果有环，得到环的入口节点
+     * 推理思路：
+     * 1.需要快慢指针检测链表是否有环；
+     * 2.首节点为H，入口节点为E，快慢指针相遇点为X；
+     * 3.H到E距离定义为D，E到X距离为S1，X环回到(按照链表前进方向)E的距离为S2；
+     * 4.slow指针移动距离为：D+S1，fast指针移动距离为D+S1+S2+S1；
+     * 5.因为移动距离上 fast = 2*slow
+     * 6.所以 2*(D+S1) = D+S1+S2+S1，推理得出：D=S2 ;
+     * 7.结论：相遇点X到入口节点E的距离=首节点H到入口节点E的距离
+     * 8.找到相遇点后，slow从头结点重新开始遍历，slow、fast指针每次走一个，再次相遇节点为入口节点
      *
      * @return
      */
-    private static LinkedNode getCycleEntranceNode() {
+    private static LinkedNode getCycleEntranceNode(LinkedNode head) {
+        if (head == null)
+            return null;
+        LinkedNode fast = head;
+        LinkedNode slow = head;
+        while (fast != null && fast.next != null) { // 无环到尾结点就停止
+            fast = fast.next.next;// fast每次前进两个
+            slow = slow.next;// slow每次前进一个
+            if (slow == fast) {// 环中，获取到相遇节点
+                slow = head;// slow改为从头再次循环
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;//两个节点都走一步
+                }
+                return slow;//入口节点
+            }
+        }
         return null;
     }
 
@@ -425,7 +450,8 @@ public class SinglyLinkedList {
         h.next = c;
         System.out.println("是否有环：" + checkHasCircle(head));
         System.out.println("环的长度：" + getCycleLength(head));
-
+        System.out.println("环的入口节点：");
+        printNode(getCycleEntranceNode(head));
 
     }
 
