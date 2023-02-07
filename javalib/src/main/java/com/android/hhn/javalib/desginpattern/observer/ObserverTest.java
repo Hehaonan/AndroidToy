@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Author: haonan.he ;<p/>
  * Date: 2/7/23,2:53 PM ;<p/>
- * Description: ;<p/>
+ * Description: 观察者模式示例;<p/>
  * Other: ;
  */
 class ObserverTest {
